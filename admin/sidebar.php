@@ -1,0 +1,43 @@
+<!-- sidebar.php -->
+<div class="sidebar">
+  <h2>Halaman Admin</h2>
+  <div class="section">Dashboards</div>
+  <a href="index.php" class="px-3 mt-3 d-block fw-bold text-dark text-decoration-none">Dashboard</a>
+
+  <div class="px-3">
+    <a class="btn btn-light w-100 text-start fw-bold" data-bs-toggle="collapse" href="#collapseAdmin" role="button" aria-expanded="false" aria-controls="collapseAdmin">
+      Administrator
+    </a>
+    <div class="collapse mt-1" id="collapseAdmin">
+      <ul class="list-unstyled ps-3">
+        <li><a class="sidebar-link" href="#">Petugas</a></li>
+        <li><a class="sidebar-link" href="#">Admin</a></li>
+        <li><a class="sidebar-link" href="masyarakat.php">Masyarakat</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <a href="barang.php" class="px-3 mt-3 d-block fw-bold text-dark text-decoration-none">Data Barang</a>
+
+  <div class="px-3 mt-2">
+    <a class="btn btn-light w-100 text-start fw-bold" data-bs-toggle="collapse" href="#collapseLaporan" role="button" aria-expanded="false" aria-controls="collapseLaporan">
+      Generate Laporan
+    </a>
+    <div class="collapse mt-1" id="collapseLaporan">
+      <ul class="list-unstyled ps-3">
+        <li><a class="sidebar-link" href="#">Laporan Lelang</a></li>
+        <li><a class="sidebar-link" href="#">Laporan Masyarakat</a></li>
+        <li><a class="sidebar-link" href="#">Laporan Barang</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mt-auto px-3 pt-4">
+    <div class="fw-bold text-secondary mb-2">
+      <i class="fa fa-user-circle"></i> <?php echo htmlspecialchars($_SESSION['nama']); ?>
+    </div>
+    <a href="#" class="btn btn-danger w-100 text-start fw-bold" onclick="logoutAlert()">
+      <i class="fa fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+</div>
