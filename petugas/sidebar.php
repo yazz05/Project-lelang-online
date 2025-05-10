@@ -11,7 +11,7 @@
     <div class="collapse mt-1" id="collapseAdmin">
       <ul class="list-unstyled ps-3">
         <li><a class="sidebar-link" href="petugas.php">Petugas</a></li>
-        <li><a class="sidebar-link" href="admin.php">Admin</a></li>
+        <li><a class="sidebar-link" href="#">Admin</a></li>
         <li><a class="sidebar-link" href="masyarakat.php">Masyarakat</a></li>
       </ul>
     </div>

@@ -25,7 +25,7 @@ $data = mysqli_query($koneksi, "
   SELECT p.* 
   FROM tb_petugas p
   JOIN tb_level l ON p.id_level = l.id_level
-  WHERE l.level = 'petugas'
+  WHERE l.level = 'administrator'
 ");
 
 ?>
@@ -34,7 +34,7 @@ $data = mysqli_query($koneksi, "
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Data Petugas - LELON</title>
+  <title>Data Admin - LELON</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
@@ -62,7 +62,7 @@ $data = mysqli_query($koneksi, "
     <?php include 'topbar.php'; ?>
 
     <div class="content">
-      <h3 class="dashboard-title">Data Petugas</h3>
+      <h3 class="dashboard-title">Data Admin</h3>
       <table class="table table-striped table-custom">
         <thead>
           <tr>
