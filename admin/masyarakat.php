@@ -89,7 +89,7 @@ $data = mysqli_query($koneksi, "SELECT * FROM tb_masyarakat");
   <script>
   function logoutAlert() {
     if (confirm('Yakin ingin logout?')) {
-      window.location.href = 'logout.php';
+      window.location.href = 'logoutAdmin.php';
     }
   }
 </script>

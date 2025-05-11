@@ -19,8 +19,8 @@ $id = $_GET['id'];
 $query = mysqli_query($koneksi, "SELECT * FROM tb_petugas WHERE id_petugas='$id'");
 $data = mysqli_fetch_assoc($query);
 
-if (!$data || $data['id_level'] != 2) {
-  echo "Data bukan petugas biasa!";
+if (!$data || $data['id_level'] != 1) {
+  echo "Data bukan admin!";
   exit();
 }
 
@@ -33,7 +33,7 @@ if (isset($_POST['update'])) {
     nama_petugas='$nama', username='$username', password='$password'
     WHERE id_petugas='$id'") or die(mysqli_error($koneksi));
 
-  header("Location: petugas.php");
+  header("Location: admin.php");
   exit();
 }
 ?>
@@ -42,7 +42,7 @@ if (isset($_POST['update'])) {
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Petugas - LELON</title>
+  <title>Edit Admin - LELON</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
@@ -150,7 +150,7 @@ if (isset($_POST['update'])) {
           <input type="text" name="password" class="form-control" value="<?= htmlspecialchars($data['password']) ?>" required>
         </div>
         <button type="submit" name="update" class="btn btn-primary">Simpan Perubahan</button>
-        <a href="petugas.php" class="btn btn-secondary ms-2">Batal</a>
+        <a href="admin.php" class="btn btn-secondary ms-2">Batal</a>
       </form>
     </div>
   </div>
@@ -164,3 +164,4 @@ if (isset($_POST['update'])) {
   </script>
 </body>
 </html>
+

@@ -145,12 +145,75 @@ date_default_timezone_set('Asia/Jakarta');
     ?>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      &copy; <?= date('Y'); ?> LeLon! | Hak cipta dilindungi
+  <!-- Footer Start -->
+  <footer style="background-color: #273036; color: #fff; padding: 0; margin-top: 2rem;">
+
+    <!-- Wave Putih di Atas Footer -->
+    <div style="margin-bottom: -5px;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="#e0e0e0" fill-opacity="1"
+          d="M0,64L48,69.3C96,75,192,85,288,122.7C384,160,480,224,576,229.3C672,235,768,181,864,144C960,107,1056,85,1152,101.3C1248,117,1344,171,1392,197.3L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
+        </path>
+      </svg>
+    </div>
+
+    <!-- Isi Footer -->
+    <div class="container py-5">
+      <div class="row">
+        <!-- Kolom 1: Info Perusahaan -->
+        <div class="col-md-4 mb-4 mb-md-0">
+          <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.4rem; margin-bottom: 20px;">Tentang LeLon</h5>
+          <p style="font-family: 'Poppins', sans-serif; font-size: 1rem; color: #dcdcdc;">
+            LeLon adalah platform lelang online yang menawarkan berbagai barang keren dengan harga yang bisa Anda tawar sendiri. Temukan barang impian Anda melalui sistem lelang yang transparan dan aman!
+          </p>
+        </div>
+
+        <!-- Kolom 2: Navigasi -->
+        <div class="col-md-4 mb-4 mb-md-0">
+          <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.4rem; margin-bottom: 20px;">Navigasi</h5>
+          <ul class="list-unstyled" style="font-family: 'Poppins', sans-serif; font-size: 1rem; color: #dcdcdc;">
+            <li><a href="index.php" style="color: #dcdcdc; text-decoration: none;">Home</a></li>
+            <li><a href="lelang.php" style="color: #dcdcdc; text-decoration: none;">Lelang</a></li>
+            <li><a href="#" style="color: #dcdcdc; text-decoration: none;">Kategori</a></li>
+            <li><a href="about.php" style="color: #dcdcdc; text-decoration: none;">Tentang Kami</a></li>
+          </ul>
+        </div>
+
+        <!-- Kolom 3: Social Media -->
+        <div class="col-md-4 mb-4 mb-md-0 text-center text-md-end">
+          <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.4rem; margin-bottom: 20px;">Ikuti Kami</h5>
+          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
+            <i class="bi bi-twitter"></i>
+          </a>
+          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
+            <i class="bi bi-linkedin"></i>
+          </a>
+        </div>
+      </div>
+
+
+
+      <!-- Garis pemisah -->
+      <hr class="mt-4" style="border-color: rgba(255,255,255,0.1);">
+
+      <!-- Copyright -->
+      <div class="row mt-4">
+        <div class="col text-center">
+          <p style="font-family: 'Poppins', sans-serif; font-size: 1rem; color: #dcdcdc; margin-bottom: 0;">
+            &copy; <?php echo date('Y'); ?> LeLon. All Rights Reserved.
+          </p>
+        </div>
+      </div>
     </div>
   </footer>
+  <!-- Footer End -->
+
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

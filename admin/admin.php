@@ -17,7 +17,7 @@ if (isset($_GET['hapus'])) {
   $id = $_GET['hapus'];
   mysqli_query($koneksi, "DELETE FROM tb_petugas WHERE id_petugas='$id'");
 
-  header("Location: petugas.php");
+  header("Location: admin.php");
   exit();
 }
 
@@ -81,8 +81,8 @@ $data = mysqli_query($koneksi, "
               <td><?= htmlspecialchars($row['username']) ?></td>
               <td><?= htmlspecialchars($row['password']) ?></td>
               <td>
-                <a href="editPetugas.php?id=<?= $row['id_petugas'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                <a href="petugas.php?hapus=<?= $row['id_petugas'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus data ini?')">Hapus</a>
+                <a href="editAdmin.php?id=<?= $row['id_petugas'] ?>" class="btn btn-warning btn-sm">Edit</a>
+                <a href="admin.php?hapus=<?= $row['id_petugas'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus data ini?')">Hapus</a>
               </td>
             </tr>
           <?php endwhile; ?>

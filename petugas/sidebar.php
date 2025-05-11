@@ -1,6 +1,6 @@
 <!-- sidebar.php -->
 <div class="sidebar">
-  <h2>Halaman Admin</h2>
+  <h2>Halaman Petugas</h2>
   <div></div>
   <a href="index.php" class="px-3 mt-3 d-block fw-bold text-dark text-decoration-none">Dashboard</a>
 
@@ -11,7 +11,7 @@
     <div class="collapse mt-1" id="collapseAdmin">
       <ul class="list-unstyled ps-3">
         <li><a class="sidebar-link" href="petugas.php">Petugas</a></li>
-        <li><a class="sidebar-link" href="#">Admin</a></li>
+        <li><a class="sidebar-link" href="admin.php">Admin</a></li>
         <li><a class="sidebar-link" href="masyarakat.php">Masyarakat</a></li>
       </ul>
     </div>
