@@ -116,6 +116,8 @@ date_default_timezone_set('Asia/Jakarta');
   <div class="container mt-5 pt-5 pb-3">
     <?php
     $kategoriList = ["Elektronik", "Furnitur", "Pakaian", "Alat", "Kendaraan", "Barang Lainnya"];
+    $today = date('Y-m-d'); // Tanggal hari ini
+
     foreach ($kategoriList as $kategori) {
       $idKategori = strtolower(str_replace(' ', '', $kategori));
       $query = $koneksi->query("SELECT * FROM tb_barang WHERE kategori = '$kategori' ORDER BY tgl DESC");
@@ -133,7 +135,14 @@ date_default_timezone_set('Asia/Jakarta');
           echo '      <h5 class="card-title">' . htmlspecialchars($row['nama_barang']) . '</h5>';
           echo '      <p class="card-text">' . htmlspecialchars($row['deskripsi_barang']) . '</p>';
           echo '      <p class="card-text text-muted"><small>' . date("d M Y", strtotime($row['tgl'])) . ' | Rp' . number_format($row['harga_awal'], 0, ',', '.') . '</small></p>';
-          echo '      <a href="#" class="btn btn-primary">Mulai Lelang!</a>';
+
+          // Cek apakah tanggal barang sama dengan hari ini
+          if (date('Y-m-d', strtotime($row['tgl'])) == $today) {
+            echo '      <a href="sesiLelang.php?id=' . $row['id_barang'] . '" class="btn btn-primary">Mulai Lelang!</a>';
+          } else {
+            echo '      <span class="badge bg-secondary">Belum waktunya lelang</span>';
+          }
+
           echo '    </div>';
           echo '  </div>';
           echo '</div>';
@@ -144,6 +153,7 @@ date_default_timezone_set('Asia/Jakarta');
     }
     ?>
   </div>
+
 
   <!-- Footer Start -->
   <footer style="background-color: #273036; color: #fff; padding: 0; margin-top: 2rem;">
@@ -196,7 +206,6 @@ date_default_timezone_set('Asia/Jakarta');
           </a>
         </div>
       </div>
-
 
 
       <!-- Garis pemisah -->

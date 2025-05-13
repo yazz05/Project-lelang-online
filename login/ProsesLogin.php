@@ -6,7 +6,7 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 
 // Cek ke tb_masyarakat
-$query_masyarakat = mysqli_query($conn, "SELECT * FROM tb_masyarakat WHERE username='$username' AND password='$password'");
+$query_masyarakat = mysqli_query($koneksi, "SELECT * FROM tb_masyarakat WHERE username='$username' AND password='$password'");
 $data_masyarakat = mysqli_fetch_assoc($query_masyarakat);
 
 if ($data_masyarakat) {
@@ -17,7 +17,7 @@ if ($data_masyarakat) {
 }
 
 // Cek ke tb_petugas (dengan join ke tb_level)
-$query_petugas = mysqli_query($conn, "
+$query_petugas = mysqli_query($koneksi, "
     SELECT p.*, l.level 
     FROM tb_petugas p 
     JOIN tb_level l ON p.id_level = l.id_level 
