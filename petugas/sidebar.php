@@ -19,6 +19,8 @@
 
   <a href="barang.php" class="px-3 mt-3 d-block fw-bold text-dark text-decoration-none">Data Barang</a>
 
+  <a href="bukaTutupLelang.php" class="px-3 mt-3 d-block fw-bold text-dark text-decoration-none">Lelang</a>
+
   <div class="px-3 mt-2">
     <a class="btn btn-light w-100 text-start fw-bold" data-bs-toggle="collapse" href="#collapseLaporan" role="button" aria-expanded="false" aria-controls="collapseLaporan">
       Generate Laporan
