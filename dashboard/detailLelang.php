@@ -1,51 +1,95 @@
 <?php
-session_start();
 include '../login/koneksi.php';
+session_start();
 
-if (!isset($_SESSION['nama'])) {
-  header("Location: login.php");
-  exit();
-}
+// Matikan display_errors supaya warning tidak ikut ke output query
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 
+// Cek id lelang di URL
 if (!isset($_GET['id'])) {
-  echo "ID Lelang tidak ditemukan!";
-  exit();
+    die("❌ ID lelang tidak dikirim di URL");
 }
 
 $id_lelang = intval($_GET['id']);
 
-// Ambil detail lelang dan barang
-$query = "SELECT l.*, b.nama_barang, b.deskripsi, b.foto, b.harga_awal 
+$query = "SELECT l.*, b.nama_barang, b.deskripsi_barang, b.foto_barang, b.harga_awal, b.id_barang 
           FROM tb_lelang l 
           JOIN tb_barang b ON l.id_barang = b.id_barang 
           WHERE l.id_lelang = $id_lelang";
+
 $result = mysqli_query($conn, $query);
+
+if (!$result) {
+    die("❌ Query error: " . mysqli_error($conn));
+}
+
 $lelang = mysqli_fetch_assoc($result);
 
 if (!$lelang) {
-  echo "Data lelang tidak ditemukan.";
-  exit();
+    die("❌ Data lelang tidak ditemukan di database.");
 }
 
-// Menangani proses bid
+// Proses bidding user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bid'])) {
-  $id_user = $_SESSION['id_user'];
-  $penawaran_harga = intval($_POST['penawaran_harga']);
-  $tgl = date('Y-m-d');
+    $id_user = $_SESSION['id_user'] ?? 0;
+    $penawaran_harga = intval($_POST['penawaran_harga']);
+    $tgl = date("Y-m-d H:i:s");
+    $id_barang = intval($lelang['id_barang']);
+    $harga_akhir = intval($lelang['harga_akhir'] ?? 0);
 
-  if ($penawaran_harga > $lelang['harga_akhir']) {
-    mysqli_query($conn, "INSERT INTO history_lelang (id_lelang, id_user, penawaran_harga, tgl_penawaran) 
-                         VALUES ($id_lelang, $id_user, $penawaran_harga, '$tgl')");
+    if ($penawaran_harga > $harga_akhir) {
+        $insert = mysqli_query($conn, "INSERT INTO history_lelang 
+            (id_lelang, id_user, id_barang, penawaran_harga, created_at) 
+            VALUES ($id_lelang, $id_user, $id_barang, $penawaran_harga, '$tgl')");
 
-    // Update harga akhir
-    mysqli_query($conn, "UPDATE tb_lelang SET harga_akhir = $penawaran_harga, id_user = $id_user WHERE id_lelang = $id_lelang");
+        $update = mysqli_query($conn, "UPDATE tb_lelang 
+            SET harga_akhir = $penawaran_harga, id_user = $id_user 
+            WHERE id_lelang = $id_lelang");
 
-    header("Location: detail_lelang.php?id=$id_lelang");
-    exit();
-  } else {
-    $error = "Penawaran harus lebih tinggi dari harga saat ini.";
-  }
+        if ($insert && $update) {
+            header("Location: detailLelang.php?id=$id_lelang");
+            exit();
+        } else {
+            $error = "Gagal menyimpan penawaran. Coba lagi.";
+        }
+    } else {
+        $error = "Penawaran harus lebih tinggi dari harga saat ini.";
+    }
 }
+
+// Proses tutup lelang oleh petugas dan tentukan pemenang
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tutup_lelang'])) {
+    // Cari penawaran tertinggi
+    $getPemenang = mysqli_query($conn, "SELECT * FROM history_lelang 
+                                        WHERE id_lelang = $id_lelang 
+                                        ORDER BY penawaran_harga DESC 
+                                        LIMIT 1");
+
+    if ($getPemenang && mysqli_num_rows($getPemenang) > 0) {
+        $pemenang = mysqli_fetch_assoc($getPemenang);
+        $id_user_pemenang = $pemenang['id_user'] ?? null;
+        $harga_akhir = $pemenang['penawaran_harga'] ?? null;
+
+        if (!$id_user_pemenang || !$harga_akhir) {
+            $error = "❌ Data pemenang tidak valid.";
+        } else {
+            $sql = "UPDATE tb_lelang 
+                    SET status = 'ditutup', id_user = $id_user_pemenang, harga_akhir = $harga_akhir 
+                    WHERE id_lelang = $id_lelang";
+
+            if (mysqli_query($conn, $sql)) {
+                header("Location: detailLelang.php?id=$id_lelang");
+                exit();
+            } else {
+                $error = "❌ Gagal menutup lelang: " . mysqli_error($conn);
+            }
+        }
+    } else {
+        $error = "Tidak ada penawaran untuk lelang ini.";
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -108,25 +152,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bid'])) {
   <div class="container" style="margin-top: 100px;">
     <div class="row">
       <div class="col-md-6">
-        <img src="img/barang/<?php echo $lelang['foto']; ?>" class="img-fluid rounded shadow" alt="<?php echo $lelang['nama_barang']; ?>">
+        <img src="img/barang/<?php echo htmlspecialchars($lelang['foto_barang']); ?>" class="img-fluid rounded shadow" alt="<?php echo htmlspecialchars($lelang['nama_barang']); ?>">
       </div>
       <div class="col-md-6">
-        <h2><?php echo $lelang['nama_barang']; ?></h2>
-        <p><?php echo nl2br($lelang['deskripsi']); ?></p>
+        <h2><?php echo htmlspecialchars($lelang['nama_barang']); ?></h2>
+        <p><?php echo nl2br(htmlspecialchars($lelang['deskripsi_barang'])); ?></p>
         <p>Harga Awal: <strong>Rp<?php echo number_format($lelang['harga_awal'], 0, ',', '.'); ?></strong></p>
         <p>Harga Saat Ini: <strong class="text-success">Rp<?php echo number_format($lelang['harga_akhir'], 0, ',', '.'); ?></strong></p>
 
+        <?php if (isset($error)) : ?>
+          <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php endif; ?>
+
         <?php if ($lelang['status'] === 'dibuka') : ?>
-          <form method="post" class="mt-3">
-            <div class="mb-3">
-              <label for="penawaran_harga" class="form-label">Masukkan Penawaran Anda</label>
-              <input type="number" class="form-control" name="penawaran_harga" required min="<?php echo $lelang['harga_akhir'] + 1; ?>">
-            </div>
-            <?php if (isset($error)) echo '<div class="alert alert-danger">' . $error . '</div>'; ?>
-            <button type="submit" name="bid" class="btn btn-primary">Tawar Sekarang</button>
-          </form>
+          <?php if ($_SESSION['role'] === 'petugas') : ?>
+            <!-- Form Tutup Lelang untuk Petugas -->
+            <form method="post" class="mt-3">
+              <button type="submit" name="tutup_lelang" class="btn btn-danger" onclick="return confirm('Yakin ingin menutup lelang ini dan menentukan pemenang?')">Tutup Lelang dan Tentukan Pemenang</button>
+            </form>
+          <?php else : ?>
+            <!-- Form Bidding untuk User biasa -->
+            <form method="post" class="mt-3">
+              <div class="mb-3">
+                <label for="penawaran_harga" class="form-label">Masukkan Penawaran Anda</label>
+                <input type="number" class="form-control" name="penawaran_harga" required min="<?php echo $lelang['harga_akhir'] + 1; ?>">
+              </div>
+              <button type="submit" name="bid" class="btn btn-primary">Tawar Sekarang</button>
+            </form>
+          <?php endif; ?>
         <?php else : ?>
           <div class="alert alert-secondary">Lelang ini telah <strong>ditutup</strong>.</div>
+          <p>Pemenang: 
+            <?php
+            // Tampilkan nama pemenang jika ada
+            if ($lelang['id_user']) {
+                $pemenangData = mysqli_query($conn, "SELECT nama_lengkap FROM tb_masyarakat WHERE id_user = " . intval($lelang['id_user']));
+                if ($pemenangData && mysqli_num_rows($pemenangData) > 0) {
+                    $pemenang = mysqli_fetch_assoc($pemenangData);
+                    echo "<strong>" . htmlspecialchars($pemenang['nama_lengkap']) . "</strong>";
+                } else {
+                    echo "<em>Tidak diketahui</em>";
+                }
+            } else {
+                echo "<em>Belum ada pemenang</em>";
+            }
+            ?>
+          </p>
         <?php endif; ?>
       </div>
     </div>
@@ -145,15 +216,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bid'])) {
       </thead>
       <tbody>
         <?php
-        $history = mysqli_query($conn, "SELECT h.*, m.nama FROM history_lelang h JOIN tb_masyarakat m ON h.id_user = m.id_user WHERE h.id_lelang = $id_lelang ORDER BY h.penawaran_harga DESC");
+        $history = mysqli_query($conn, "SELECT h.*, m.nama_lengkap FROM history_lelang h JOIN tb_masyarakat m ON h.id_user = m.id_user WHERE h.id_lelang = $id_lelang ORDER BY h.penawaran_harga DESC");
         $no = 1;
         while ($row = mysqli_fetch_assoc($history)) {
           echo "<tr>
-                <td>$no</td>
-                <td>{$row['nama']}</td>
-                <td>Rp" . number_format($row['penawaran_harga'], 0, ',', '.') . "</td>
-                <td>{$row['tgl_penawaran']}</td>
-              </tr>";
+                  <td>$no</td>
+                  <td>" . htmlspecialchars($row['nama_lengkap']) . "</td>
+                  <td>Rp" . number_format($row['penawaran_harga'], 0, ',', '.') . "</td>
+                  <td>" . htmlspecialchars($row['created_at']) . "</td>
+                </tr>";
           $no++;
         }
         ?>

@@ -10,6 +10,7 @@ $query_masyarakat = mysqli_query($koneksi, "SELECT * FROM tb_masyarakat WHERE us
 $data_masyarakat = mysqli_fetch_assoc($query_masyarakat);
 
 if ($data_masyarakat) {
+    $_SESSION['id_user'] = $data_masyarakat['id_user'];
     $_SESSION['username'] = $data_masyarakat['username'];
     $_SESSION['nama'] = $data_masyarakat['nama_lengkap'];
     header("Location: ../dashboard/index.php");

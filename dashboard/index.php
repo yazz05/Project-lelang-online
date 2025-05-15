@@ -39,7 +39,7 @@ if (!isset($_SESSION['nama'])) {
         <img src="img/bannerLelon1.jpg" class="d-block w-100" style="height: 345px; object-fit: cover; margin-top: 55px;" alt="gambar 1">
       </div>
       <div class="carousel-item">
-        <img src="img/bannerLelon2.jpeg" class="d-block w-100" style="height: 345px; object-fit: cover; margin-top: 55px;" alt="gambar 2">
+        <img src="img/bannerLelon2.png" class="d-block w-100" style="height: 345px; object-fit: cover; margin-top: 55px;" alt="gambar 2">
       </div>
       <div class="carousel-item">
         <img src="img/bannerLelon3.png" class="d-block w-100" style="height: 345px; object-fit: cover; margin-top: 55px;" alt="gambar 3">

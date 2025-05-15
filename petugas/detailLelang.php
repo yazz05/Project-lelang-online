@@ -1,59 +1,73 @@
 <?php
 session_start();
-$koneksi = mysqli_connect("localhost", "root", "", "lelang_online");
+$koneksi = new mysqli("localhost", "root", "", "lelang_online");
 
-$id_lelang = $_GET['id'];
+if ($koneksi->connect_error) {
+    die("Koneksi gagal: " . $koneksi->connect_error);
+}
+
+$id_lelang = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+if ($id_lelang <= 0) {
+    die("ID lelang tidak valid.");
+}
 
 // Ambil info lelang & barang
-$lelang = mysqli_fetch_assoc(mysqli_query($koneksi, "
+$stmt = $koneksi->prepare("
     SELECT l.*, b.nama_barang, b.foto_barang, b.deskripsi_barang, b.harga_awal 
     FROM tb_lelang l 
     JOIN tb_barang b ON l.id_barang = b.id_barang 
-    WHERE l.id_lelang = $id_lelang
-"));
+    WHERE l.id_lelang = ?
+");
+$stmt->bind_param("i", $id_lelang);
+$stmt->execute();
+$result = $stmt->get_result();
+$lelang = $result->fetch_assoc();
+$stmt->close();
+
+if (!$lelang) {
+    die("Data lelang tidak ditemukan.");
+}
 
 // Ambil semua bid
-$penawaran = mysqli_query($koneksi, "
+$stmt = $koneksi->prepare("
     SELECT h.*, m.nama_lengkap 
     FROM history_lelang h 
     JOIN tb_masyarakat m ON h.id_user = m.id_user 
-    WHERE h.id_lelang = $id_lelang 
+    WHERE h.id_lelang = ? 
     ORDER BY penawaran_harga DESC
 ");
+$stmt->bind_param("i", $id_lelang);
+$stmt->execute();
+$penawaran = $stmt->get_result();
+$stmt->close();
 
 // Mengambil penawaran tertinggi
-$penawaran_tertinggi = mysqli_fetch_assoc(mysqli_query($koneksi, "
-    SELECT h.penawaran_harga, m.nama_lengkap 
+$stmt = $koneksi->prepare("
+    SELECT h.penawaran_harga, h.id_user, m.nama_lengkap 
     FROM history_lelang h 
     JOIN tb_masyarakat m ON h.id_user = m.id_user 
-    WHERE h.id_lelang = $id_lelang 
+    WHERE h.id_lelang = ? 
     ORDER BY h.penawaran_harga DESC LIMIT 1
-"));
-
-// Proses penentuan pemenang
-if (isset($_POST['tutup_lelang'])) {
-    $id_pemenang = $_POST['id_user'];
-    $harga_akhir = $_POST['harga_akhir'];
-
-    mysqli_query($koneksi, "UPDATE tb_lelang SET status = 'ditutup', id_user = $id_pemenang, harga_akhir = $harga_akhir WHERE id_lelang = $id_lelang");
-
-    echo "<script>alert('Lelang ditutup. Pemenang telah dipilih!'); window.location='lelang.php';</script>";
-}
+");
+$stmt->bind_param("i", $id_lelang);
+$stmt->execute();
+$result = $stmt->get_result();
+$penawaran_tertinggi = $result->fetch_assoc();
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Detail Lelang - LELON</title>
 
-    <!-- External CSS links -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
 
-    <!-- External JS links -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
@@ -64,7 +78,6 @@ if (isset($_POST['tutup_lelang'])) {
             }
         }
     </script>
-
     <style>
         * {
             margin: 0;
@@ -237,23 +250,22 @@ if (isset($_POST['tutup_lelang'])) {
 </head>
 
 <body>
-
-    <!-- Include Side Bar -->
     <?php include('sidebar.php'); ?>
-
-    <!-- Include Topbar -->
     <?php include('topbar.php'); ?>
 
     <div class="content-wrapper">
         <div class="container-fluid">
             <h3>Detail Lelang: <?= htmlspecialchars($lelang['nama_barang']); ?></h3>
 
-            <!-- Gambar dan Deskripsi Barang -->
             <div>
-                <img src="<?= htmlspecialchars($lelang['foto_barang']); ?>" alt="<?= htmlspecialchars($lelang['nama_barang']); ?>" class="img-fluid" style="max-height: 400px; object-fit: cover;">
+                <img src="<?= htmlspecialchars($lelang['foto_barang']); ?>" alt="<?= htmlspecialchars($lelang['nama_barang']); ?>" class="img-fluid" style="max-height: 400px; object-fit: cover;" />
                 <p><strong>Deskripsi:</strong> <?= htmlspecialchars($lelang['deskripsi_barang']); ?></p>
                 <p><strong>Harga Awal:</strong> Rp<?= number_format($lelang['harga_awal'], 0, ',', '.'); ?></p>
-                <p><strong>Status Lelang:</strong> <span class="badge <?= $lelang['status'] === 'dibuka' ? 'bg-success' : 'bg-danger'; ?>"><?= ucfirst($lelang['status']); ?></span></p>
+                <p><strong>Status Lelang:</strong>
+                    <span class="badge <?= (isset($lelang['status']) && trim(strtolower($lelang['status'])) === 'dibuka') ? 'bg-success' : 'bg-danger'; ?>">
+                        <?= ucfirst(htmlspecialchars($lelang['status'])); ?>
+                    </span>
+                </p>
             </div>
 
             <?php if ($penawaran_tertinggi) : ?>
@@ -262,7 +274,6 @@ if (isset($_POST['tutup_lelang'])) {
                 <p><strong>Penawaran:</strong> Rp<?= number_format($penawaran_tertinggi['penawaran_harga'], 0, ',', '.'); ?></p>
             <?php endif; ?>
 
-            <!-- Tabel Riwayat Bid -->
             <h4>Riwayat Bid:</h4>
             <table class="table table-bordered">
                 <thead>
@@ -273,28 +284,22 @@ if (isset($_POST['tutup_lelang'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row = mysqli_fetch_assoc($penawaran)) { ?>
+                    <?php while ($row = $penawaran->fetch_assoc()) : ?>
                         <tr>
                             <td><?= htmlspecialchars($row['nama_lengkap']); ?></td>
                             <td>Rp<?= number_format($row['penawaran_harga'], 0, ',', '.'); ?></td>
-                            <td><?= date("d M Y H:i", strtotime($row['tanggal_penawaran'])); ?></td>
+                            <td><?= date("d M Y H:i", strtotime($row['created_at'])); ?></td>
                         </tr>
-                    <?php } ?>
+                    <?php endwhile; ?>
                 </tbody>
             </table>
 
-            <!-- Tombol untuk menutup lelang (hanya jika lelang belum ditutup) -->
-            <?php if ($lelang['status'] !== 'ditutup') : ?>
-                <form method="POST" class="mt-3">
-                    <input type="hidden" name="id_user" value="<?= $penawaran_tertinggi['id_user']; ?>">
-                    <input type="hidden" name="harga_akhir" value="<?= $penawaran_tertinggi['penawaran_harga']; ?>">
-                    <button type="submit" name="tutup_lelang" class="btn btn-danger">Tutup Lelang dan Pilih Pemenang</button>
-                </form>
-            <?php endif; ?>
-
+            <!-- Tombol selalu tampil -->
+            <a href="pilihPemenang.php?id=<?= $id_lelang ?>" class="btn btn-danger mt-3">
+                Akhiri Lelang dan Pilih Pemenang
+            </a>
         </div>
     </div>
-
 </body>
 
 </html>

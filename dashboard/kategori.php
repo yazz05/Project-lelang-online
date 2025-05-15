@@ -112,47 +112,51 @@ date_default_timezone_set('Asia/Jakarta');
     </div>
   </nav>
 
-  <!-- Kategori Section -->
-  <div class="container mt-5 pt-5 pb-3">
-    <?php
-    $kategoriList = ["Elektronik", "Furnitur", "Pakaian", "Alat", "Kendaraan", "Barang Lainnya"];
-    $today = date('Y-m-d'); // Tanggal hari ini
+<!-- Kategori Section -->
+<div class="container mt-5 pt-5 pb-3">
+  <?php
+  $kategoriList = ["Elektronik", "Furnitur", "Pakaian", "Alat", "Kendaraan", "Barang Lainnya"];
 
-    foreach ($kategoriList as $kategori) {
-      $idKategori = strtolower(str_replace(' ', '', $kategori));
-      $query = $koneksi->query("SELECT * FROM tb_barang WHERE kategori = '$kategori' ORDER BY tgl DESC");
+  foreach ($kategoriList as $kategori) {
+    $idKategori = strtolower(str_replace(' ', '', $kategori));
 
-      if ($query->num_rows > 0) {
-        echo '<div class="kategori-section py-4" id="' . $idKategori . '">';
-        echo '<div class="kategori-title">' . htmlspecialchars($kategori) . '</div>';
-        echo '<div class="row g-4">';
+    // Ambil data dari tb_lelang JOIN tb_barang berdasarkan kategori
+    $query = $koneksi->query("
+      SELECT l.*, b.*
+      FROM tb_lelang l
+      JOIN tb_barang b ON l.id_barang = b.id_barang
+      WHERE b.kategori = '$kategori' AND l.status = 'dibuka'
+      ORDER BY l.tgl_lelang DESC
+    ");
 
-        while ($row = $query->fetch_assoc()) {
-          echo '<div class="col-6 col-md-3">';
-          echo '  <div class="card h-100">';
-          echo '    <img src="' . htmlspecialchars($row['foto_barang']) . '" class="card-img-top" alt="' . htmlspecialchars($row['nama_barang']) . '">';
-          echo '    <div class="card-body">';
-          echo '      <h5 class="card-title">' . htmlspecialchars($row['nama_barang']) . '</h5>';
-          echo '      <p class="card-text">' . htmlspecialchars($row['deskripsi_barang']) . '</p>';
-          echo '      <p class="card-text text-muted"><small>' . date("d M Y", strtotime($row['tgl'])) . ' | Rp' . number_format($row['harga_awal'], 0, ',', '.') . '</small></p>';
+    if ($query->num_rows > 0) {
+      echo '<div class="kategori-section py-4" id="' . $idKategori . '">';
+      echo '<div class="kategori-title">' . htmlspecialchars($kategori) . '</div>';
+      echo '<div class="row g-4">';
 
-          // Cek apakah tanggal barang sama dengan hari ini
-          if (date('Y-m-d', strtotime($row['tgl'])) == $today) {
-            echo '      <a href="sesiLelang.php?id=' . $row['id_barang'] . '" class="btn btn-primary">Mulai Lelang!</a>';
-          } else {
-            echo '      <span class="badge bg-secondary">Belum waktunya lelang</span>';
-          }
+      while ($row = $query->fetch_assoc()) {
+        echo '<div class="col-6 col-md-3">';
+        echo '  <div class="card h-100">';
+        echo '    <img src="' . htmlspecialchars($row['foto_barang']) . '" class="card-img-top" alt="' . htmlspecialchars($row['nama_barang']) . '">';
+        echo '    <div class="card-body">';
+        echo '      <h5 class="card-title">' . htmlspecialchars($row['nama_barang']) . '</h5>';
+        echo '      <p class="card-text">' . htmlspecialchars($row['deskripsi_barang']) . '</p>';
+        echo '      <p class="card-text text-muted"><small>' . date("d M Y", strtotime($row['tgl_lelang'])) . ' | Rp' . number_format($row['harga_awal'], 0, ',', '.') . '</small></p>';
 
-          echo '    </div>';
-          echo '  </div>';
-          echo '</div>';
-        }
+        echo '      <a href="sesiLelang.php?id=' . $row['id_barang'] . '" class="btn btn-primary">Mulai Lelang!</a>';
 
-        echo '</div></div>';
+        echo '    </div>';
+        echo '  </div>';
+        echo '</div>';
       }
+
+      echo '</div></div>';
     }
-    ?>
-  </div>
+  }
+  ?>
+</div>
+
+
 
 
   <!-- Footer Start -->

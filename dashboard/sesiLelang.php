@@ -71,7 +71,7 @@ $queryRiwayat = $koneksi->query("
                 <p><strong>Penawaran Tertinggi:</strong> Rp<?= number_format($tertinggi, 0, ',', '.') ?></p>
 
                 <?php if ($data['status'] === 'dibuka'): ?>
-                    <form action="proses_bid.php" method="POST">
+                    <form action="prosesBid.php" method="POST">
                         <input type="hidden" name="id_barang" value="<?= $id_barang ?>">
                         <input type="hidden" name="id_lelang" value="<?= $data['id_lelang'] ?>">
                         <div class="mb-3">
@@ -102,7 +102,7 @@ $queryRiwayat = $koneksi->query("
                     <tr>
                         <td><?= htmlspecialchars($r['nama_lengkap']) ?></td>
                         <td>Rp<?= number_format($r['penawaran_harga'], 0, ',', '.') ?></td>
-                        <td><?= date('d M Y H:i', strtotime($r['tgl_lelang'])) ?></td>
+                        <td><?= date('d M Y H:i', strtotime($r['created_at'])) ?></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
