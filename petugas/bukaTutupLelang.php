@@ -37,6 +37,14 @@ if (isset($_POST['submit'])) {
     $status = 'dibuka';
     $id_user = NULL; // Karena belum ada user yang ikut lelang
 
+    // Cek apakah barang sudah dilelang
+    $cek = mysqli_query($koneksi, "SELECT * FROM tb_lelang WHERE id_barang = $id_barang");
+    if (mysqli_num_rows($cek) > 0) {
+        echo "<script>alert('Barang sudah terdaftar di lelang!'); window.location='bukaTutupLelang.php';</script>";
+        exit;
+    }
+
+
     // Buat prepared statement
     $stmt = mysqli_prepare($koneksi, "INSERT INTO tb_lelang (id_barang, tgl_lelang, harga_akhir, id_petugas, status, id_user) VALUES (?, ?, ?, ?, ?, ?)");
 
@@ -57,7 +65,8 @@ if (isset($_POST['submit'])) {
 
 
 // Ambil semua barang
-$barang = mysqli_query($koneksi, "SELECT * FROM tb_barang");
+$barang = mysqli_query($koneksi, "SELECT * FROM tb_barang WHERE id_barang NOT IN (SELECT id_barang FROM tb_lelang)");
+
 
 // Ambil lelang aktif
 $lelang = mysqli_query($koneksi, "SELECT tb_lelang.*, tb_barang.nama_barang FROM tb_lelang 

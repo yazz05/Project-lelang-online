@@ -29,11 +29,9 @@ date_default_timezone_set('Asia/Jakarta');
     }
 
     .kategori-section {
-      /* kalau perlu padding dan lainnya tetap bisa pakai */
       padding: 1rem 0;
       background-color: transparent;
     }
-
 
     .kategori-title {
       padding: 1rem;
@@ -57,9 +55,22 @@ date_default_timezone_set('Asia/Jakarta');
     footer {
       background-color: #212529;
       color: white;
-    
       padding: 1rem 0;
       margin-top: 2rem;
+    }
+
+    /* Scrollbar untuk horizontal scroll */
+    .scroll-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb:hover {
+      background: #555;
     }
   </style>
 </head>
@@ -112,57 +123,50 @@ date_default_timezone_set('Asia/Jakarta');
     </div>
   </nav>
 
-<!-- Kategori Section -->
-<div class="container mt-5 pt-5 pb-3">
-  <?php
-  $kategoriList = ["Elektronik", "Furnitur", "Pakaian", "Alat", "Kendaraan", "Barang Lainnya"];
+  <!-- Kategori Section -->
+  <div class="container mt-5 pt-5 pb-3">
+    <?php
+    $kategoriList = ["Elektronik", "Furnitur", "Pakaian", "Alat", "Kendaraan", "Barang Lainnya"];
 
-  foreach ($kategoriList as $kategori) {
-    $idKategori = strtolower(str_replace(' ', '', $kategori));
+    foreach ($kategoriList as $kategori) {
+      $idKategori = strtolower(str_replace(' ', '', $kategori));
 
-    // Ambil data dari tb_lelang JOIN tb_barang berdasarkan kategori
-    $query = $koneksi->query("
-      SELECT l.*, b.*
-      FROM tb_lelang l
-      JOIN tb_barang b ON l.id_barang = b.id_barang
-      WHERE b.kategori = '$kategori' AND l.status = 'dibuka'
-      ORDER BY l.tgl_lelang DESC
-    ");
+      // Ambil data dari tb_lelang JOIN tb_barang berdasarkan kategori
+      $query = $koneksi->query("
+        SELECT l.*, b.*
+        FROM tb_lelang l
+        JOIN tb_barang b ON l.id_barang = b.id_barang
+        WHERE b.kategori = '$kategori' AND l.status = 'dibuka'
+        ORDER BY l.tgl_lelang DESC
+      ");
 
-    if ($query->num_rows > 0) {
-      echo '<div class="kategori-section py-4" id="' . $idKategori . '">';
-      echo '<div class="kategori-title">' . htmlspecialchars($kategori) . '</div>';
-      echo '<div class="row g-4">';
+      if ($query->num_rows > 0) {
+        echo '<div class="kategori-section" id="' . $idKategori . '">';
+        echo '<div class="kategori-title">' . htmlspecialchars($kategori) . '</div>';
+        echo '<div class="d-flex flex-row overflow-auto gap-3 px-2 scroll-container" style="scroll-snap-type: x mandatory;">';
 
-      while ($row = $query->fetch_assoc()) {
-        echo '<div class="col-6 col-md-3">';
-        echo '  <div class="card h-100">';
-        echo '    <img src="' . htmlspecialchars($row['foto_barang']) . '" class="card-img-top" alt="' . htmlspecialchars($row['nama_barang']) . '">';
-        echo '    <div class="card-body">';
-        echo '      <h5 class="card-title">' . htmlspecialchars($row['nama_barang']) . '</h5>';
-        echo '      <p class="card-text">' . htmlspecialchars($row['deskripsi_barang']) . '</p>';
-        echo '      <p class="card-text text-muted"><small>' . date("d M Y", strtotime($row['tgl_lelang'])) . ' | Rp' . number_format($row['harga_awal'], 0, ',', '.') . '</small></p>';
+        while ($row = $query->fetch_assoc()) {
+          echo '<div style="min-width: 250px; scroll-snap-align: start;">';
+          echo '  <div class="card h-100">';
+          echo '    <img src="' . htmlspecialchars($row['foto_barang']) . '" class="card-img-top" alt="' . htmlspecialchars($row['nama_barang']) . '">';
+          echo '    <div class="card-body">';
+          echo '      <h5 class="card-title">' . htmlspecialchars($row['nama_barang']) . '</h5>';
+          echo '      <p class="card-text">' . htmlspecialchars($row['deskripsi_barang']) . '</p>';
+          echo '      <p class="card-text text-muted"><small>' . date("d M Y", strtotime($row['tgl_lelang'])) . ' | Rp' . number_format($row['harga_awal'], 0, ',', '.') . '</small></p>';
+          echo '      <a href="sesiLelang.php?id=' . $row['id_barang'] . '" class="btn btn-success">Mulai Lelang!</a>';
+          echo '    </div>';
+          echo '  </div>';
+          echo '</div>';
+        }
 
-        echo '      <a href="sesiLelang.php?id=' . $row['id_barang'] . '" class="btn btn-primary">Mulai Lelang!</a>';
-
-        echo '    </div>';
-        echo '  </div>';
-        echo '</div>';
+        echo '</div></div>';
       }
-
-      echo '</div></div>';
     }
-  }
-  ?>
-</div>
-
-
-
+    ?>
+  </div>
 
   <!-- Footer Start -->
   <footer style="background-color: #273036; color: #fff; padding: 0; margin-top: 2rem;">
-
-    <!-- Wave Putih di Atas Footer -->
     <div style="margin-bottom: -5px;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <path fill="#e0e0e0" fill-opacity="1"
@@ -171,10 +175,8 @@ date_default_timezone_set('Asia/Jakarta');
       </svg>
     </div>
 
-    <!-- Isi Footer -->
     <div class="container py-5">
       <div class="row">
-        <!-- Kolom 1: Info Perusahaan -->
         <div class="col-md-4 mb-4 mb-md-0">
           <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.4rem; margin-bottom: 20px;">Tentang LeLon</h5>
           <p style="font-family: 'Poppins', sans-serif; font-size: 1rem; color: #dcdcdc;">
@@ -182,7 +184,6 @@ date_default_timezone_set('Asia/Jakarta');
           </p>
         </div>
 
-        <!-- Kolom 2: Navigasi -->
         <div class="col-md-4 mb-4 mb-md-0">
           <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.4rem; margin-bottom: 20px;">Navigasi</h5>
           <ul class="list-unstyled" style="font-family: 'Poppins', sans-serif; font-size: 1rem; color: #dcdcdc;">
@@ -193,29 +194,16 @@ date_default_timezone_set('Asia/Jakarta');
           </ul>
         </div>
 
-        <!-- Kolom 3: Social Media -->
         <div class="col-md-4 mb-4 mb-md-0 text-center text-md-end">
           <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.4rem; margin-bottom: 20px;">Ikuti Kami</h5>
-          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
-            <i class="bi bi-facebook"></i>
-          </a>
-          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
-            <i class="bi bi-twitter"></i>
-          </a>
-          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
-            <i class="bi bi-instagram"></i>
-          </a>
-          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
-            <i class="bi bi-linkedin"></i>
-          </a>
+          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-facebook"></i></a>
+          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-twitter"></i></a>
+          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-instagram"></i></a>
+          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-linkedin"></i></a>
         </div>
       </div>
 
-
-      <!-- Garis pemisah -->
       <hr class="mt-4" style="border-color: rgba(255,255,255,0.1);">
-
-      <!-- Copyright -->
       <div class="row mt-4">
         <div class="col text-center">
           <p style="font-family: 'Poppins', sans-serif; font-size: 1rem; color: #dcdcdc; margin-bottom: 0;">
@@ -225,8 +213,6 @@ date_default_timezone_set('Asia/Jakarta');
       </div>
     </div>
   </footer>
-  <!-- Footer End -->
-
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

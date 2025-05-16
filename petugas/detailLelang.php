@@ -246,6 +246,64 @@ $stmt->close();
         .bg-danger {
             background-color: #e74c3c;
         }
+
+        .detail-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .detail-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #2a7fc1;
+            padding-bottom: 10px;
+        }
+
+        .item-image {
+            width: 100%;
+            height: auto;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-info p {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+
+        .item-info strong {
+            color: #555;
+            width: 130px;
+            display: inline-block;
+        }
+
+        .penawaran-tertinggi {
+            background-color: #f9f9f9;
+            padding: 15px 20px;
+            border-left: 5px solid #2ecc71;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+
+        .penawaran-tertinggi p {
+            margin: 5px 0;
+        }
+
+        .table-container {
+            margin-top: 30px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 
@@ -254,11 +312,12 @@ $stmt->close();
     <?php include('topbar.php'); ?>
 
     <div class="content-wrapper">
-        <div class="container-fluid">
-            <h3>Detail Lelang: <?= htmlspecialchars($lelang['nama_barang']); ?></h3>
+        <div class="container-fluid detail-container">
+            <h3 class="detail-title">Detail Lelang: <?= htmlspecialchars($lelang['nama_barang']); ?></h3>
 
-            <div>
-                <img src="<?= htmlspecialchars($lelang['foto_barang']); ?>" alt="<?= htmlspecialchars($lelang['nama_barang']); ?>" class="img-fluid" style="max-height: 400px; object-fit: cover;" />
+            <img src="<?= htmlspecialchars($lelang['foto_barang']); ?>" alt="<?= htmlspecialchars($lelang['nama_barang']); ?>" class="item-image" />
+
+            <div class="item-info">
                 <p><strong>Deskripsi:</strong> <?= htmlspecialchars($lelang['deskripsi_barang']); ?></p>
                 <p><strong>Harga Awal:</strong> Rp<?= number_format($lelang['harga_awal'], 0, ',', '.'); ?></p>
                 <p><strong>Status Lelang:</strong>
@@ -269,11 +328,15 @@ $stmt->close();
             </div>
 
             <?php if ($penawaran_tertinggi) : ?>
-                <h4>Penawaran Tertinggi:</h4>
-                <p><strong>Nama:</strong> <?= htmlspecialchars($penawaran_tertinggi['nama_lengkap']); ?></p>
-                <p><strong>Penawaran:</strong> Rp<?= number_format($penawaran_tertinggi['penawaran_harga'], 0, ',', '.'); ?></p>
+                <div class="penawaran-tertinggi">
+                    <h5><strong>Penawaran Tertinggi:</strong></h5>
+                    <p><strong>Nama:</strong> <?= htmlspecialchars($penawaran_tertinggi['nama_lengkap']); ?></p>
+                    <p><strong>Penawaran:</strong> Rp<?= number_format($penawaran_tertinggi['penawaran_harga'], 0, ',', '.'); ?></p>
+                </div>
             <?php endif; ?>
+        </div>
 
+        <div class="container-fluid table-container">
             <h4>Riwayat Bid:</h4>
             <table class="table table-bordered">
                 <thead>
@@ -294,17 +357,17 @@ $stmt->close();
                 </tbody>
             </table>
 
-            <!-- Tombol selalu tampil -->
+            <!-- Tombol Akhir Lelang -->
             <?php if (isset($lelang['status']) && strtolower($lelang['status']) != 'ditutup') : ?>
-    <a href="pilihPemenang.php?id=<?= $id_lelang ?>" class="btn btn-danger mt-3">
-        Akhiri Lelang dan Pilih Pemenang
-    </a>
-<?php else : ?>
-    <div class="alert alert-info mt-3">Lelang sudah ditutup dan pemenang telah dipilih.</div>
-<?php endif; ?>
-
+                <a href="pilihPemenang.php?id=<?= $id_lelang ?>" class="btn btn-danger mt-3">
+                    Akhiri Lelang dan Pilih Pemenang
+                </a>
+            <?php else : ?>
+                <div class="alert alert-info mt-3">Lelang sudah ditutup dan pemenang telah dipilih.</div>
+            <?php endif; ?>
         </div>
     </div>
+
 </body>
 
 </html>
