@@ -1,0 +1,61 @@
+/* sidebar.css */
+* {
+  box-sizing: border-box;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ccc;
+  padding: 20px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.sidebar h2 {
+  text-align: center;
+  color: white;
+  background-color: #2a7fc1;
+  padding: 15px 0;
+  margin: 0;
+}
+
+.sidebar a {
+  display: block;
+  padding: 10px 20px;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.sidebar a:hover,
+.sidebar-link:hover {
+  background-color: #d0e8f8;
+}
+
+.sidebar .section {
+  padding: 10px 20px;
+  font-weight: bold;
+  color: #666;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 8px 10px;
+  color: #333;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+/* Responsive sidebar */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    position: relative;
+    height: auto;
+  }
+}

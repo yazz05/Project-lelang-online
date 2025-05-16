@@ -149,9 +149,44 @@ if (isset($_GET['tanggal']) && !empty($_GET['tanggal'])) {
                     <a href="barang.php" class="btn btn-secondary">Reset</a>
                     <a href="tambahBarang.php" class="btn btn-success">+ Tambah Barang</a>
                 </form>
-
-                
             </div>
+
+            <!-- Notifikasi sukses -->
+            <?php if (isset($_SESSION['barang_terhapus'])): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Barang berhasil dihapus.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php unset($_SESSION['barang_terhapus']); ?>
+            <?php endif; ?>
+
+            <!-- Modal jika barang sedang dilelang -->
+            <?php if (isset($_SESSION['lelang_aktif'])): ?>
+                <div class="modal fade show" id="lelangModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning">
+                                <h5 class="modal-title">Peringatan</h5>
+                            </div>
+                            <div class="modal-body">
+                                Barang ini sedang dalam proses lelang. Harap akhiri sesi lelang terlebih dahulu sebelum menghapus barang.
+                            </div>
+                            <div class="modal-footer">
+                                <a href="barang.php" class="btn btn-secondary">Tutup</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    const lelangModal = new bootstrap.Modal(document.getElementById('lelangModal'), {
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    lelangModal.show();
+                </script>
+                <?php unset($_SESSION['lelang_aktif']); ?>
+            <?php endif; ?>
 
             <table class="table table-bordered table-hover">
                 <thead>
@@ -193,5 +228,4 @@ if (isset($_GET['tanggal']) && !empty($_GET['tanggal'])) {
     </script>
 
 </body>
-
 </html>

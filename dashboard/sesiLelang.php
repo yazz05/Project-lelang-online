@@ -38,26 +38,18 @@ $queryRiwayat = $koneksi->query("
 <head>
     <meta charset="UTF-8">
     <title>Sesi Lelang</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">LelangOnline</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Kategori</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Akun</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+   <!-- Navbar -->
+  <?php include 'navbar.php'; ?>
 
     <!-- Sesi Lelang -->
-    <div class="container my-5">
+   <div class="container mt-5" style="padding-top: 80px;">
         <div class="row">
             <div class="col-md-5">
                 <img src="<?= htmlspecialchars($data['foto_barang']) ?>" class="img-fluid rounded">
@@ -109,12 +101,16 @@ $queryRiwayat = $koneksi->query("
         </table>
     </div>
 
+
     <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-4 mt-5">
-        <div class="container">
-            <p>&copy; <?= date('Y') ?> LelangOnline. All rights reserved.</p>
-        </div>
-    </footer>
+  <?php include 'footer.php'; ?>
+      <script>
+    function logoutAlert() {
+      if (confirm("Yakin mau logout?")) {
+        window.location.href = "logout.php";
+      }
+    }
+  </script>
 </body>
 
 </html>

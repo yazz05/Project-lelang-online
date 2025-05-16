@@ -19,18 +19,7 @@
 
   <a href="barang.php" class="px-3 mt-3 d-block fw-bold text-dark text-decoration-none">Data Barang</a>
 
-  <div class="px-3 mt-2">
-    <a class="btn btn-light w-100 text-start fw-bold" data-bs-toggle="collapse" href="#collapseLaporan" role="button" aria-expanded="false" aria-controls="collapseLaporan">
-      Generate Laporan
-    </a>
-    <div class="collapse mt-1" id="collapseLaporan">
-      <ul class="list-unstyled ps-3">
-        <li><a class="sidebar-link" href="#">Laporan Lelang</a></li>
-        <li><a class="sidebar-link" href="#">Laporan Masyarakat</a></li>
-        <li><a class="sidebar-link" href="#">Laporan Barang</a></li>
-      </ul>
-    </div>
-  </div>
+<a href="laporanLelang.php" class="px-3 mt-3 d-block fw-bold text-dark text-decoration-none">Generate Laporan</a>
 
   <div class="mt-auto px-3 pt-4">
     <div class="fw-bold text-secondary mb-2">

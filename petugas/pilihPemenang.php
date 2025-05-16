@@ -42,7 +42,7 @@ if (isset($_POST['konfirmasi'])) {
         $stmt = $koneksi->prepare("UPDATE tb_lelang SET status = 'ditutup', id_user = ?, harga_akhir = ? WHERE id_lelang = ?");
         $stmt->bind_param("iii", $id_pemenang, $harga_akhir, $id_lelang);
         if ($stmt->execute()) {
-            echo "<script>alert('Lelang berhasil ditutup dan pemenang telah dipilih!'); window.location='lelang.php';</script>";
+            echo "<script>alert('Lelang berhasil ditutup dan pemenang telah dipilih!'); window.location='../sesiLelang.php';</script>";
             exit;
         } else {
             echo "Update error: " . $stmt->error;
@@ -61,24 +61,58 @@ if (isset($_POST['konfirmasi'])) {
     <meta charset="UTF-8" />
     <title>Pilih Pemenang Lelang</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f0f8ff;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
+        }
+
+        .btn-primary,
+        .btn-success {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover,
+        .btn-success:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .badge-blue {
+            background-color: #007bff;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container mt-5">
-        <h3>Pilih Pemenang untuk: <?= htmlspecialchars($data['nama_barang']) ?></h3>
-        <p><strong>Deskripsi:</strong> <?= htmlspecialchars($data['deskripsi_barang']) ?></p>
-        <p><strong>Harga Awal:</strong> Rp<?= number_format($data['harga_awal'], 0, ',', '.') ?></p>
+        <div class="card p-4">
+            <div class="card-body">
+                <h3 class="text-primary mb-4">Pilih Pemenang untuk: <span class="badge bg-primary"><?= htmlspecialchars($data['nama_barang']) ?></span></h3>
+                <div class="mb-3">
+                    <p><strong>Deskripsi:</strong> <?= htmlspecialchars($data['deskripsi_barang']) ?></p>
+                    <p><strong>Harga Awal:</strong> <span class="badge bg-info text-dark">Rp<?= number_format($data['harga_awal'], 0, ',', '.') ?></span></p>
+                </div>
 
-        <h4>Penawaran Tertinggi:</h4>
-        <p><strong>Nama Pemenang Sementara:</strong> <?= htmlspecialchars($data['nama_lengkap']) ?></p>
-        <p><strong>Harga Akhir:</strong> Rp<?= number_format($data['penawaran_harga'], 0, ',', '.') ?></p>
+                <hr />
 
-        <form method="POST">
-            <input type="hidden" name="id_user" value="<?= (int)$data['id_user'] ?>" />
-            <input type="hidden" name="harga_akhir" value="<?= (int)$data['penawaran_harga'] ?>" />
-            <button type="submit" name="konfirmasi" class="btn btn-success">Konfirmasi & Akhiri Lelang</button>
-            <a href="detailLelang.php?id=<?= $id_lelang ?>" class="btn btn-secondary">Batal</a>
-        </form>
+                <h4 class="text-success">Penawaran Tertinggi:</h4>
+                <p><strong>Nama Pemenang Sementara:</strong> <?= htmlspecialchars($data['nama_lengkap']) ?: "<em>Belum ada</em>" ?></p>
+                <p><strong>Harga Akhir:</strong> <span class="badge bg-success">Rp<?= number_format($data['penawaran_harga'], 0, ',', '.') ?></span></p>
+
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="id_user" value="<?= (int)$data['id_user'] ?>" />
+                    <input type="hidden" name="harga_akhir" value="<?= (int)$data['penawaran_harga'] ?>" />
+                    <button type="submit" name="konfirmasi" class="btn btn-success me-2">Konfirmasi & Akhiri Lelang</button>
+                    <a href="detailLelang.php?id=<?= $id_lelang ?>" class="btn btn-secondary">Batal</a>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 

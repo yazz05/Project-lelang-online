@@ -1,0 +1,22 @@
+.topbar {
+  background-color: #2a7fc1;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Untuk mengatur container utama (main content) */
+.main {
+  flex: 1;
+  margin-left: 250px;
+  padding: 20px;
+}
+
+/* Responsive main container jika sidebar full width */
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+  }
+}

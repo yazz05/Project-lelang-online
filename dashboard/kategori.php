@@ -57,7 +57,7 @@ date_default_timezone_set('Asia/Jakarta');
     footer {
       background-color: #212529;
       color: white;
-      text-align: center;
+    
       padding: 1rem 0;
       margin-top: 2rem;
     }

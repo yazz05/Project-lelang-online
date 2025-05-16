@@ -66,7 +66,7 @@ $stmt->close();
     <title>Detail Lelang - LELON</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
@@ -295,9 +295,14 @@ $stmt->close();
             </table>
 
             <!-- Tombol selalu tampil -->
-            <a href="pilihPemenang.php?id=<?= $id_lelang ?>" class="btn btn-danger mt-3">
-                Akhiri Lelang dan Pilih Pemenang
-            </a>
+            <?php if (isset($lelang['status']) && strtolower($lelang['status']) != 'ditutup') : ?>
+    <a href="pilihPemenang.php?id=<?= $id_lelang ?>" class="btn btn-danger mt-3">
+        Akhiri Lelang dan Pilih Pemenang
+    </a>
+<?php else : ?>
+    <div class="alert alert-info mt-3">Lelang sudah ditutup dan pemenang telah dipilih.</div>
+<?php endif; ?>
+
         </div>
     </div>
 </body>
