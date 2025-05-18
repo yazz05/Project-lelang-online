@@ -5,8 +5,6 @@ if (!isset($_SESSION['nama'])) {
     exit();
 }
 
-
-
 $koneksi = mysqli_connect("localhost", "root", "", "lelang_online");
 if (!$koneksi) {
     die("Koneksi gagal: " . mysqli_connect_error());
@@ -14,69 +12,57 @@ if (!$koneksi) {
 
 if (isset($_GET['aksi']) && $_GET['aksi'] == 'hapus') {
     $id = $_GET['id_lelang'];
-    // Hapus riwayat dulu agar tidak melanggar FK
     mysqli_query($koneksi, "DELETE FROM history_lelang WHERE id_lelang = $id");
     mysqli_query($koneksi, "DELETE FROM tb_lelang WHERE id_lelang = $id");
     echo "<script>alert('Data lelang berhasil dihapus'); window.location='bukaTutupLelang.php';</script>";
 }
 
-
-// Proses buka/tutup lelang
+// Buka atau tutup lelang
 if (isset($_GET['aksi']) && isset($_GET['id_lelang'])) {
     $id = $_GET['id_lelang'];
     $status = $_GET['aksi'] == 'buka' ? 'dibuka' : 'ditutup';
     mysqli_query($koneksi, "UPDATE tb_lelang SET status = '$status' WHERE id_lelang = $id");
 }
 
-// Proses menambahkan barang ke lelang
+// Tambah barang ke lelang
 if (isset($_POST['submit'])) {
     $id_barang = $_POST['id_barang'];
     $id_petugas = $_SESSION['id_petugas'];
     $tgl = date('Y-m-d');
     $harga_akhir = 0;
     $status = 'dibuka';
-    $id_user = NULL; // Karena belum ada user yang ikut lelang
+    $id_user = NULL;
 
-    // Cek apakah barang sudah dilelang
     $cek = mysqli_query($koneksi, "SELECT * FROM tb_lelang WHERE id_barang = $id_barang");
     if (mysqli_num_rows($cek) > 0) {
         echo "<script>alert('Barang sudah terdaftar di lelang!'); window.location='bukaTutupLelang.php';</script>";
         exit;
     }
 
-
-    // Buat prepared statement
     $stmt = mysqli_prepare($koneksi, "INSERT INTO tb_lelang (id_barang, tgl_lelang, harga_akhir, id_petugas, status, id_user) VALUES (?, ?, ?, ?, ?, ?)");
-
     if ($stmt) {
         mysqli_stmt_bind_param($stmt, "isiisi", $id_barang, $tgl, $harga_akhir, $id_petugas, $status, $id_user);
-
         if (mysqli_stmt_execute($stmt)) {
             echo "<script>alert('Barang berhasil dimasukkan ke lelang!'); window.location='bukaTutupLelang.php';</script>";
         } else {
             echo "<script>alert('Gagal menambahkan barang ke lelang!');</script>";
         }
-
         mysqli_stmt_close($stmt);
     } else {
         echo "<script>alert('Query gagal dipersiapkan!');</script>";
     }
 }
 
-
-// Ambil semua barang
+// Ambil barang yang belum dilelang
 $barang = mysqli_query($koneksi, "SELECT * FROM tb_barang WHERE id_barang NOT IN (SELECT id_barang FROM tb_lelang)");
 
-
-// Ambil lelang aktif
+// Ambil semua data lelang
 $lelang = mysqli_query($koneksi, "SELECT tb_lelang.*, tb_barang.nama_barang FROM tb_lelang 
 JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
-
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <title>Kelola Lelang - Petugas</title>
@@ -84,19 +70,11 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
         body {
             display: flex;
             min-height: 100vh;
             background-color: #e6e6e6;
             margin: 0;
-            padding: 0;
         }
 
         .sidebar {
@@ -108,7 +86,6 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
             top: 0;
             left: 0;
             height: 100vh;
-            overflow-y: auto;
         }
 
         .sidebar h2 {
@@ -126,23 +103,8 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
             font-weight: bold;
         }
 
-        .sidebar a:hover,
-        .sidebar-link:hover {
+        .sidebar a:hover {
             background-color: #d0e8f8;
-        }
-
-        .sidebar .section {
-            padding: 10px 20px;
-            font-weight: bold;
-            color: #666;
-        }
-
-        .sidebar-link {
-            display: block;
-            padding: 8px 10px;
-            color: #333;
-            text-decoration: none;
-            font-weight: normal;
         }
 
         .main {
@@ -160,9 +122,7 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
         }
 
         .content {
-            flex: 1;
             padding: 40px;
-            background-color: #e6e6e6;
         }
 
         .dashboard-title {
@@ -213,11 +173,16 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
                             <td><?= $l['tgl_lelang']; ?></td>
                             <td><?= ucfirst($l['status']); ?></td>
                             <td>
-                                <?php if ($l['status'] == 'dibuka') { ?>
-                                    <a href="?aksi=tutup&id_lelang=<?= $l['id_lelang']; ?>" class="btn btn-danger btn-sm">Tutup</a>
-                                <?php } else { ?>
-                                    <a href="?aksi=buka&id_lelang=<?= $l['id_lelang']; ?>" class="btn btn-success btn-sm">Buka</a>
-                                <?php } ?>
+                                <?php
+                                $bolehBukaTutup = $l['status'] == 'dibuka' || ($l['status'] == 'ditutup' && is_null($l['id_user']));
+                                if ($bolehBukaTutup) {
+                                    if ($l['status'] == 'dibuka') {
+                                        echo '<a href="?aksi=tutup&id_lelang=' . $l['id_lelang'] . '" class="btn btn-danger btn-sm">Tutup</a> ';
+                                    } else {
+                                        echo '<a href="?aksi=buka&id_lelang=' . $l['id_lelang'] . '" class="btn btn-success btn-sm">Buka</a> ';
+                                    }
+                                }
+                                ?>
                                 <a href="?aksi=hapus&id_lelang=<?= $l['id_lelang']; ?>" class="btn btn-warning btn-sm" onclick="return confirm('Yakin ingin menghapus lelang ini?')">Hapus</a>
                                 <a href="detailLelang.php?id=<?= $l['id_lelang']; ?>" class="btn btn-info btn-sm">Detail</a>
                             </td>
@@ -235,7 +200,5 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
             }
         }
     </script>
-
 </body>
-
 </html>

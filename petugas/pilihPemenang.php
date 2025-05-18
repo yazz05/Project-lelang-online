@@ -39,15 +39,34 @@ if (isset($_POST['konfirmasi'])) {
     $harga_akhir = isset($_POST['harga_akhir']) ? (int)$_POST['harga_akhir'] : 0;
 
     if ($id_pemenang > 0 && $harga_akhir > 0) {
+        // Update status lelang
         $stmt = $koneksi->prepare("UPDATE tb_lelang SET status = 'ditutup', id_user = ?, harga_akhir = ? WHERE id_lelang = ?");
         $stmt->bind_param("iii", $id_pemenang, $harga_akhir, $id_lelang);
+
         if ($stmt->execute()) {
-            echo "<script>alert('Lelang berhasil ditutup dan pemenang telah dipilih!'); window.location='../sesiLelang.php';</script>";
+            $stmt->close();
+
+            // Cek apakah sudah ada di history
+            $cek = $koneksi->prepare("SELECT COUNT(*) as jumlah FROM history_lelang WHERE id_lelang = ? AND id_user = ? AND penawaran_harga = ?");
+            $cek->bind_param("iii", $id_lelang, $id_pemenang, $harga_akhir);
+            $cek->execute();
+            $cek_result = $cek->get_result()->fetch_assoc();
+            $cek->close();
+
+            // Jika belum ada, insert ke history
+            if ($cek_result['jumlah'] == 0) {
+                $insert = $koneksi->prepare("INSERT INTO history_lelang (id_lelang, id_user, penawaran_harga, created_at) VALUES (?, ?, ?, NOW())");
+                $insert->bind_param("iii", $id_lelang, $id_pemenang, $harga_akhir);
+                $insert->execute();
+                $insert->close();
+            }
+
+            echo "<script>alert('Lelang berhasil ditutup dan pemenang telah dipilih!'); window.location='../petugas/bukaTutupLelang.php';</script>";
             exit;
         } else {
             echo "Update error: " . $stmt->error;
+            $stmt->close();
         }
-        $stmt->close();
     } else {
         echo "<script>alert('Data pemenang tidak valid.');</script>";
     }
@@ -56,7 +75,6 @@ if (isset($_POST['konfirmasi'])) {
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8" />
     <title>Pilih Pemenang Lelang</title>
@@ -65,30 +83,25 @@ if (isset($_POST['konfirmasi'])) {
         body {
             background-color: #f0f8ff;
         }
-
         .card {
             border: none;
             box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
         }
-
         .btn-primary,
         .btn-success {
             background-color: #007bff;
             border-color: #007bff;
         }
-
         .btn-primary:hover,
         .btn-success:hover {
             background-color: #0056b3;
             border-color: #004085;
         }
-
         .badge-blue {
             background-color: #007bff;
         }
     </style>
 </head>
-
 <body>
     <div class="container mt-5">
         <div class="card p-4">
@@ -115,5 +128,4 @@ if (isset($_POST['konfirmasi'])) {
         </div>
     </div>
 </body>
-
 </html>

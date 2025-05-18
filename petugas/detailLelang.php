@@ -363,7 +363,7 @@ $stmt->close();
                     Akhiri Lelang dan Pilih Pemenang
                 </a>
             <?php else : ?>
-                <div class="alert alert-info mt-3">Lelang sudah ditutup dan pemenang telah dipilih.</div>
+                <div class="alert alert-info mt-3">Lelang sudah ditutup.</div>
             <?php endif; ?>
         </div>
     </div>
