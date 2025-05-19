@@ -1,5 +1,5 @@
 <?php
-require '../dompdf/vendor/autoload.php'; // path ke autoload Composer
+require '../dompdf/vendor/autoload.php';
 use Dompdf\Dompdf;
 
 // Koneksi dan data
@@ -31,6 +31,26 @@ $html = '
     .bg-success { background-color: #2ecc71; }
     .bg-danger { background-color: #e74c3c; }
     .footer { font-size: 12px; color: #777; margin-top: 30px; }
+    .price-section { 
+      margin: 20px 0; 
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-left: 4px solid #2a7fc1;
+    }
+    .price-row { 
+      display: flex; 
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+    .price-label { font-weight: bold; color: #555; }
+    .price-value { font-weight: bold; }
+    .price-difference {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #ccc;
+      font-weight: bold;
+      color: #2a7fc1;
+    }
   </style>
 </head>
 <body>
@@ -42,17 +62,38 @@ if ($data) {
     <table>
       <tr><th>Nama Barang</th><td>' . htmlspecialchars($data['nama_barang']) . '</td></tr>
       <tr><th>Kategori</th><td>' . htmlspecialchars($data['kategori']) . '</td></tr>
-      <tr><th>Harga Awal</th><td>Rp' . number_format($data['harga_awal'], 0, ',', '.') . '</td></tr>
       <tr><th>Tanggal Lelang</th><td>' . date("d M Y", strtotime($data['tgl_lelang'])) . '</td></tr>
       <tr><th>Status</th><td><span class="badge ' . $statusBadge . '">' . ucfirst($data['status']) . '</span></td></tr>';
     
     if ($data['status'] === 'ditutup') {
         $html .= '
-        <tr><th>Pemenang</th><td>' . htmlspecialchars($data['nama_lengkap'] ?? '-') . '</td></tr>
-        <tr><th>Harga Akhir</th><td>Rp' . number_format($data['harga_akhir'], 0, ',', '.') . '</td></tr>';
+        <tr><th>Pemenang</th><td>' . htmlspecialchars($data['nama_lengkap'] ?? '-') . '</td></tr>';
     }
 
     $html .= '</table>';
+    
+    // Price comparison section
+    $html .= '
+    <div class="price-section">
+      <div class="price-row">
+        <span class="price-label">Harga Awal:</span>
+        <span class="price-value">Rp' . number_format($data['harga_awal'], 0, ',', '.') . '</span>
+      </div>
+      <div class="price-row">
+        <span class="price-label">Harga Akhir:</span>
+        <span class="price-value">Rp' . number_format($data['harga_akhir'] ?? $data['harga_awal'], 0, ',', '.') . '</span>
+      </div>';
+    
+    if ($data['status'] === 'ditutup' && $data['harga_akhir'] > $data['harga_awal']) {
+        $difference = $data['harga_akhir'] - $data['harga_awal'];
+        $percentage = round(($difference / $data['harga_awal']) * 100, 2);
+        $html .= '
+        <div class="price-difference">
+          Kenaikan: Rp' . number_format($difference, 0, ',', '.') . ' (' . $percentage . '%)
+        </div>';
+    }
+    
+    $html .= '</div>';
 } else {
     $html .= '<p>Data tidak ditemukan.</p>';
 }
@@ -67,4 +108,4 @@ $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
 
 // Output ke browser
-$dompdf->stream("invoice-lelang.pdf", ["Attachment" => false]); // true untuk download langsung
+$dompdf->stream("invoice-lelang.pdf", ["Attachment" => false]);

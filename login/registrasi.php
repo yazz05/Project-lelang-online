@@ -7,81 +7,110 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to bottom, #000000, #212529);
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: linear-gradient(to bottom, #212529, #000000);
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: Arial, sans-serif;
+      position: relative;
+      overflow: hidden;
     }
 
-    .register-box {
-      background-color: #1c1c1c;
-      color: white;
-      padding: 40px 30px;
+    .register-container {
+      background: #1c1c1c;
+      padding: 40px;
       border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       width: 100%;
       max-width: 400px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 1;
     }
 
-    .register-box h3 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #0d6efd;
+    .register-container h3 {
+      margin-bottom: 20px;
+      color: #2ca8ff;
     }
 
     .form-control {
       border: none;
-      border-radius: 20px;
-      padding: 12px 15px;
-      background-color: #333;
-      color: #ffffff;
+      border-radius: 25px;
+      background: #333;
+      color: #fff;
     }
 
     .form-control::placeholder {
-      color: #cccccc;
+      color: #ccc;
     }
 
     .form-control:focus {
-      background-color: #444;
-      color: #ffffff;
-      box-shadow: none;
+      color: #fff;
     }
 
     .btn-register {
-      background-color: #0d6efd;
-      border: none;
-      border-radius: 20px;
-      padding: 10px;
+      border-radius: 25px;
+      background-color: #2ca8ff;
+      color: white;
       font-weight: bold;
       width: 100%;
-      transition: 0.3s;
+      padding: 10px;
+      border: none;
     }
 
     .btn-register:hover {
-      background-color: #0b5ed7;
+      background-color: #1b91e6;
     }
 
-    .text-link {
-      text-align: center;
-      margin-top: 15px;
+    .register-container p {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #ccc;
     }
 
-    .text-link a {
-      color: #0d6efd;
+    .register-container a {
+      color: #2ca8ff;
+      font-weight: bold;
       text-decoration: none;
     }
 
-    .text-link a:hover {
+    .register-container a:hover {
       text-decoration: underline;
+    }
+
+    /* Style untuk maskot */
+    .maskot {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      width: 80px;
+      height: auto;
+      z-index: 0;
+      opacity: 0.9;
+      transition: all 0.3s ease;
+    }
+
+    .maskot:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    /* Responsive untuk layar kecil */
+    @media (max-width: 576px) {
+      .maskot {
+        width: 60px;
+        left: 10px;
+        bottom: 10px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="register-box">
+  <div class="register-container">
     <h3>Registrasi</h3>
     <form action="../login/prosesRegistrasi.php" method="POST">
       <div class="mb-3">
@@ -98,10 +127,11 @@
       </div>
       <button type="submit" class="btn btn-register">Daftar</button>
     </form>
-    <div class="text-link">
-      Sudah punya akun? <a href="login.php">Login</a>
-    </div>
+    <p>Sudah punya akun? <a href="login.php">Login</a></p>
   </div>
+
+  <!-- Tambahkan gambar maskot di sini -->
+  <img src="../dashboard/img/logoLelon.PNG" alt="Lelon" class="maskot">
 
 </body>
 

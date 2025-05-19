@@ -87,6 +87,37 @@ $data = $result->fetch_assoc();
       background-color: #c0392b;
     }
 
+    .price-comparison {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #2a7fc1;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .price-label {
+      font-weight: bold;
+      color: #555;
+    }
+
+    .price-value {
+      font-weight: bold;
+    }
+
+    .price-difference {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #ccc;
+      font-weight: bold;
+      color: #2a7fc1;
+    }
+
     .footer {
       text-align: center;
       margin-top: 40px;
@@ -142,10 +173,6 @@ $data = $result->fetch_assoc();
         <td><?= htmlspecialchars($data['kategori']) ?></td>
       </tr>
       <tr>
-        <th>Harga Awal</th>
-        <td>Rp<?= number_format($data['harga_awal'], 0, ',', '.') ?></td>
-      </tr>
-      <tr>
         <th>Tanggal Lelang</th>
         <td><?= date("d M Y", strtotime($data['tgl_lelang'])) ?></td>
       </tr>
@@ -157,17 +184,33 @@ $data = $result->fetch_assoc();
           </span>
         </td>
       </tr>
-      <?php if ($data['status'] === 'ditutup'): ?>
+    </table>
+
+    <div class="price-comparison">
+      <div class="price-row">
+        <span class="price-label">Harga Awal:</span>
+        <span class="price-value">Rp<?= number_format($data['harga_awal'], 0, ',', '.') ?></span>
+      </div>
+      <div class="price-row">
+        <span class="price-label">Harga Akhir:</span>
+        <span class="price-value">Rp<?= number_format($data['harga_akhir'] ?? $data['harga_awal'], 0, ',', '.') ?></span>
+      </div>
+      <?php if (isset($data['harga_akhir']) && $data['harga_akhir'] > $data['harga_awal']): ?>
+        <div class="price-difference">
+          Kenaikan: Rp<?= number_format($data['harga_akhir'] - $data['harga_awal'], 0, ',', '.') ?>
+          (<?= round(($data['harga_akhir'] - $data['harga_awal']) / $data['harga_awal'] * 100, 2) ?>%)
+        </div>
+      <?php endif; ?>
+    </div>
+
+    <?php if ($data['status'] === 'ditutup'): ?>
+    <table>
       <tr>
         <th>Pemenang</th>
         <td><?= htmlspecialchars($data['nama_lengkap'] ?? '-') ?></td>
       </tr>
-      <tr>
-        <th>Harga Akhir</th>
-        <td>Rp<?= number_format($data['harga_akhir'], 0, ',', '.') ?></td>
-      </tr>
-      <?php endif; ?>
     </table>
+    <?php endif; ?>
 
     <div class="no-print">
       <a href="#" onclick="window.print()" class="print-btn">🖨️ Cetak Halaman</a>

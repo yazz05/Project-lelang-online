@@ -23,7 +23,7 @@ if (!isset($_SESSION['nama'])) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <style>
     body {
-      background-color: #e0e0e0 !important;
+      background-color: white !important;
     }
   </style>
 </head>
@@ -47,72 +47,83 @@ if (!isset($_SESSION['nama'])) {
     </div>
   </div>
 
-  <h5 class="text-center" style="margin-top: 100px;">Temukan Harga Terbaik, Raih Barang Impianmu.</h5>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
+  <p class="h6" style="margin-top: 100px; margin-bottom: 100px; text-align: center;">Temukan Harga Terbaik,  <small class="text-body-secondary h6">Raih Barang Impianmu.</small></p>
   </section>
 
-  <!-- Welcome Section -->
-  <section style="background-color: #ffffff; padding: 60px 0; min-height: 100vh; display: flex; justify-content: center; align-items: center;" id="pengenalan">
-    <div class="container">
-      <div class="row align-items-center justify-content-center" style="height: 100%;">
-        <!-- Kiri: Teks -->
-        <div class="col-md-6 mb-4 mb-md-0 text-center text-md-start">
-          <p style="font-family: 'Poppins', sans-serif; font-size: 1.2rem; line-height: 1.8; font-weight: 500; letter-spacing: 0.5px; color: #333;">
-            Yoo, selamat datang di tempat nongkrongnya para pemburu barang kece – lelang online versi kekinian! Di sini lo bisa dapetin barang-barang keren, mulai dari yang rare banget sampe yang lagi hype, semua lewat sistem lelang yang aman, transparan, dan real-time. Tinggal daftar, pilih barang incaran, terus gas tawar-tawaran sampe menang. Nggak perlu ribet, bisa langsung dari layar komputer lo. Jadi, siap-siap dapetin deal gokil sambil rebahan!
-          </p>
-        </div>
-
-        <!-- Kanan: Gambar + slogan -->
-        <div class="col-md-6 text-center">
-          <img src="img/bannerLelon3.png" alt="Lelang Keren" class="img-fluid rounded shadow-sm mb-3" style="max-height: 300px; object-fit: cover;">
-          <p style="font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 600; color: #555; font-style: italic; letter-spacing: 0.5px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
-            “Lelang seru, barang baru, gaya lo makin jago.”
-          </p>
-        </div>
+  <!-- SECTION 1: Kategori Populer -->
+<section class="py-5">
+  <div class="container">
+    <h4 class="text-center mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Kategori Populer</h4>
+    <div class="d-flex flex-wrap justify-content-center gap-4">
+      <div class="text-center">
+        <img src="#" alt="Elektronik" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Elektronik</p>
       </div>
+      <div class="text-center">
+        <img src="#" alt="Furnitur" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Furnitur</p>
+      </div>
+      <div class="text-center">
+        <img src="#" alt="Pakaian" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Pakaian</p>
+      </div>
+      <div class="text-center">
+        <img src="#" alt="Alat" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Alat</p>
+      </div>
+      <div class="text-center">
+        <img src="#" alt="Kendaraan" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Kendaraan</p>
+      </div>
+      <div class="text-center">
+        <img src="#" alt="Barang Lainnya" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Barang Lainnya</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: Banner Shopping Info -->
+<section class="py-4">
+  <div class="container">
+    <div class="bg-light d-flex flex-column flex-md-row justify-content-between align-items-center p-4 rounded-4">
+      <div>
+        <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; margin-bottom: 5px;">Belanja jadi mudah</h5>
+        <p style="font-family: 'Poppins', sans-serif; margin: 0; font-size: 0.95rem; color: #555;">
+          Nikmati keandalan, pengiriman aman, dan pengembalian tanpa repot.
+        </p>
+      </div>
+      <a href="kategori.php" class="btn btn-dark mt-3 mt-md-0 rounded-pill px-4" style="font-weight: 600; font-size: 0.95rem;">
+        Mulai sekarang
+      </a>
+    </div>
+  </div>
+</section>
+
+
+   <!-- Full-width Banner Section with Overlay -->
+  <section class="position-relative" style="height: 400px; overflow: hidden; margin-top: 100px;">
+    <!-- Gambar Banner -->
+    <img src="img/bannerLelon1.jpg" alt="Banner" class="w-100 h-100 object-fit-cover">
+
+    <!-- Overlay gelap -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.4);"></div>
+
+
+    <!-- Overlay teks di kiri -->
+    <div class="position-absolute top-50 start-0 translate-middle-y ps-5 text-white" style="max-width: 600px;">
+      <h2 class="fw-bold mb-3" style="font-size: 2.5rem;">
+        Get your order or your money back
+      </h2>
+      <p class="mb-4" style="font-size: 1.1rem;">
+        Shop confidently with eBay Money Back Guarantee.
+      </p>
+      <a href="#" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold">
+        Learn more
+      </a>
     </div>
   </section>
 
-  <!-- Cara Mengikuti Lelang Section -->
-  <section style="background-color: #e0e0e0; padding: 60px 0; min-height: 100vh; margin-top: 80px;" id="home3">
-    <div class="container">
-      <div class="row align-items-center justify-content-center">
-        <!-- Teks Penjelasan -->
-        <div class="col-md-8">
-          <div style="background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
-            <h2 style="font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 600; color: #333; text-align: left; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
-              <i class="bi bi-clipboard-check" style="font-size: 2rem; color: #4caf50; margin-right: 10px;"></i>Cara Mengikuti Lelang
-            </h2>
-            <p style="font-family: 'Poppins', sans-serif; font-size: 1.2rem; line-height: 1.8; font-weight: 500; letter-spacing: 0.5px; color: #333; text-align: left;">
-              Ikuti langkah-langkah berikut untuk bergabung dalam lelang online yang seru ini!
-            </p>
-
-            <ol style="text-align: left; margin-top: 20px; font-size: 1.1rem; color: #555; list-style-type: decimal; margin-left: 30px;">
-              <li style="margin-bottom: 10px;">Daftar akun di platform kami jika belum memiliki akun.</li>
-              <li style="margin-bottom: 10px;">Cari barang yang ingin Anda bid dan pastikan Anda sudah paham kondisi barangnya.</li>
-              <li style="margin-bottom: 10px;">Masukkan harga tawaran yang Anda inginkan dan ikut lelang secara real-time.</li>
-              <li style="margin-bottom: 10px;">Jika tawaran Anda yang tertinggi saat lelang selesai, Anda menang dan akan diberikan instruksi pembayaran.</li>
-            </ol>
-
-            <p style="font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 600; color: #333; font-style: italic; text-align: left; margin-top: 20px;">
-              Nikmati pengalaman lelang yang seru dan mudah!
-            </p>
-
-            <!-- Tombol Ayo Mulai Sekarang -->
-            <div class="text-center" style="margin-top: 30px;">
-              <a href="kategori.php" class="btn btn-success" style="font-family: 'Poppins', sans-serif; font-size: 1.2rem; font-weight: 600; padding: 10px 30px; border-radius: 5px; text-decoration: none; color: #fff;">
-                Mulai Lelang Pertamamu!
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Footer -->
   <?php include 'footer.php'; ?>

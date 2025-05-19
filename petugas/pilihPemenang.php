@@ -68,7 +68,7 @@ if (isset($_POST['konfirmasi'])) {
             $stmt->close();
         }
     } else {
-        echo "<script>alert('Data pemenang tidak valid.');</script>";
+        echo "<script>alert('Pemenang belum ditentukan!');</script>";
     }
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['nama'])) {
-    header("Location: login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 
@@ -144,7 +144,7 @@ if (isset($_GET['tanggal']) && !empty($_GET['tanggal'])) {
                 <form method="GET" class="d-flex align-items-center flex-wrap gap-2">
                     <label for="tanggal" class="mb-0">Filter Tanggal:</label>
                     <input type="date" name="tanggal" id="tanggal" class="form-control"
-                           value="<?= isset($_GET['tanggal']) ? $_GET['tanggal'] : $tanggalHariIni ?>">
+                        value="<?= isset($_GET['tanggal']) ? $_GET['tanggal'] : $tanggalHariIni ?>">
                     <button type="submit" class="btn btn-primary">Tampilkan</button>
                     <a href="barang.php" class="btn btn-secondary">Reset</a>
                     <a href="tambahBarang.php" class="btn btn-success">+ Tambah Barang</a>
@@ -160,33 +160,24 @@ if (isset($_GET['tanggal']) && !empty($_GET['tanggal'])) {
                 <?php unset($_SESSION['barang_terhapus']); ?>
             <?php endif; ?>
 
-            <!-- Modal jika barang sedang dilelang -->
+            <!-- Notifikasi barang gagal dihapus karena sedang dilelang -->
             <?php if (isset($_SESSION['lelang_aktif'])): ?>
-                <div class="modal fade show" id="lelangModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header bg-warning">
-                                <h5 class="modal-title">Peringatan</h5>
-                            </div>
-                            <div class="modal-body">
-                                Barang ini sedang dalam proses lelang. Harap akhiri sesi lelang terlebih dahulu sebelum menghapus barang.
-                            </div>
-                            <div class="modal-footer">
-                                <a href="barang.php" class="btn btn-secondary">Tutup</a>
-                            </div>
-                        </div>
-                    </div>
+                <div class="alert alert-warning">
+                    Barang tidak bisa dihapus karena lelang masih berjalan!
                 </div>
+            <?php unset($_SESSION['lelang_aktif']);
+            endif; ?>
 
-                <script>
-                    const lelangModal = new bootstrap.Modal(document.getElementById('lelangModal'), {
-                        backdrop: 'static',
-                        keyboard: false
-                    });
-                    lelangModal.show();
-                </script>
-                <?php unset($_SESSION['lelang_aktif']); ?>
+
+            <!-- Notifikasi jika barang dan lelang berhasil dihapus -->
+            <?php if (isset($_SESSION['lelang_dan_barang_terhapus'])): ?>
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    Barang yang terkait berhasil dihapus.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php unset($_SESSION['lelang_dan_barang_terhapus']); ?>
             <?php endif; ?>
+
 
             <table class="table table-bordered table-hover">
                 <thead>
@@ -228,4 +219,5 @@ if (isset($_GET['tanggal']) && !empty($_GET['tanggal'])) {
     </script>
 
 </body>
+
 </html>

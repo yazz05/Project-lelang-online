@@ -15,6 +15,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative; /* Untuk positioning maskot */
+      overflow: hidden; /* Mencegah scroll jika maskot keluar dari viewport */
     }
 
     .login-container {
@@ -25,6 +27,7 @@
       max-width: 400px;
       text-align: center;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 1; /* Memastikan form di atas maskot */
     }
 
     .login-container h2 {
@@ -69,11 +72,36 @@
     .login-container a:hover {
       text-decoration: underline;
     }
+
+    /* Style untuk maskot */
+    .maskot {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      width: 80px; /* Ukuran bisa disesuaikan */
+      height: auto;
+      z-index: 0;
+      opacity: 0.9; /* Sedikit transparan */
+      transition: all 0.3s ease;
+    }
+
+    .maskot:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    /* Responsive untuk layar kecil */
+    @media (max-width: 576px) {
+      .maskot {
+        width: 60px;
+        left: 10px;
+        bottom: 10px;
+      }
+    }
   </style>
 </head>
 
 <body>
-
   <div class="login-container">
     <h2>Login</h2>
     <form action="prosesLogin.php" method="POST">
@@ -88,6 +116,8 @@
     <p>Belum punya akun? <a href="registrasi.php">Registrasi</a></p>
   </div>
 
+  <!-- Tambahkan gambar maskot di sini -->
+  <img src="../dashboard/img/logoLelon.png" alt="Logo" class="maskot">
 </body>
 
 </html>
