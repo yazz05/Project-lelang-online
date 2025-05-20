@@ -26,39 +26,43 @@ if (isset($_GET['aksi']) && isset($_GET['id_lelang'])) {
 
 // Tambah barang ke lelang
 if (isset($_POST['submit'])) {
-    $id_barang = $_POST['id_barang'];
-    $id_petugas = $_SESSION['id_petugas'];
-    $tgl = date('Y-m-d');
-    $harga_akhir = 0;
-    $status = 'dibuka';
-    $id_user = NULL;
+    if (isset($_POST['id_barang']) && is_array($_POST['id_barang'])) {
+        $id_petugas = $_SESSION['id_petugas'];
+        $tgl = date('Y-m-d');
+        $harga_akhir = 0;
+        $status = 'dibuka';
+        $id_user = NULL;
 
-    $cek = mysqli_query($koneksi, "SELECT * FROM tb_lelang WHERE id_barang = $id_barang");
-    if (mysqli_num_rows($cek) > 0) {
-        echo "<script>alert('Barang sudah terdaftar di lelang!'); window.location='bukaTutupLelang.php';</script>";
-        exit;
-    }
-
-    $stmt = mysqli_prepare($koneksi, "INSERT INTO tb_lelang (id_barang, tgl_lelang, harga_akhir, id_petugas, status, id_user) VALUES (?, ?, ?, ?, ?, ?)");
-    if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "isiisi", $id_barang, $tgl, $harga_akhir, $id_petugas, $status, $id_user);
-        if (mysqli_stmt_execute($stmt)) {
-            echo "<script>alert('Barang berhasil dimasukkan ke lelang!'); window.location='bukaTutupLelang.php';</script>";
-        } else {
-            echo "<script>alert('Gagal menambahkan barang ke lelang!');</script>";
+        foreach ($_POST['id_barang'] as $id_barang) {
+            $cek = mysqli_query($koneksi, "SELECT * FROM tb_lelang WHERE id_barang = $id_barang");
+            if (mysqli_num_rows($cek) == 0) {
+                $stmt = mysqli_prepare($koneksi, "INSERT INTO tb_lelang (id_barang, tgl_lelang, harga_akhir, id_petugas, status, id_user) VALUES (?, ?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "isiisi", $id_barang, $tgl, $harga_akhir, $id_petugas, $status, $id_user);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
         }
-        mysqli_stmt_close($stmt);
+
+        echo "<script>alert('Barang berhasil dimasukkan ke lelang!'); window.location='bukaTutupLelang.php';</script>";
     } else {
-        echo "<script>alert('Query gagal dipersiapkan!');</script>";
+        echo "<script>alert('Tidak ada barang yang dipilih!');</script>";
     }
 }
+
+
 
 // Ambil barang yang belum dilelang
 $barang = mysqli_query($koneksi, "SELECT * FROM tb_barang WHERE id_barang NOT IN (SELECT id_barang FROM tb_lelang)");
 
 // Ambil semua data lelang
-$lelang = mysqli_query($koneksi, "SELECT tb_lelang.*, tb_barang.nama_barang FROM tb_lelang 
-JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
+$lelang = mysqli_query($koneksi, "
+    SELECT tb_lelang.*, tb_barang.nama_barang,
+           (SELECT COUNT(*) FROM history_lelang WHERE history_lelang.id_lelang = tb_lelang.id_lelang) AS jumlah_penawar
+    FROM tb_lelang 
+    JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang
+    ORDER BY jumlah_penawar DESC, tb_lelang.id_lelang DESC
+");
+
 ?>
 
 <!DOCTYPE html>
@@ -131,6 +135,47 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
             color: #2a7fc1;
             margin-bottom: 30px;
         }
+
+        .dropdown-checkbox {
+        position: relative;
+        display: inline-block;
+        width: 300px;
+    }
+
+    .dropdown-btn {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: white;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    .dropdown-list {
+        display: none;
+        position: absolute;
+        z-index: 1;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    .dropdown-list label {
+        display: block;
+        padding: 8px 10px;
+        cursor: pointer;
+    }
+
+    .dropdown-list label:hover {
+        background-color: #f0f0f0;
+    }
+
+    .dropdown-checkbox.open .dropdown-list {
+        display: block;
+    }
+
     </style>
 </head>
 
@@ -142,17 +187,25 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
             <h2 class="dashboard-title">Kelola Lelang</h2>
 
             <!-- Form Tambah Barang ke Lelang -->
-            <form method="POST" class="mb-4">
-                <div class="input-group">
-                    <select name="id_barang" class="form-select" required>
-                        <option value="">-- Pilih Barang --</option>
-                        <?php while ($b = mysqli_fetch_assoc($barang)) { ?>
-                            <option value="<?= $b['id_barang']; ?>"><?= $b['nama_barang']; ?></option>
-                        <?php } ?>
-                    </select>
-                    <button class="btn btn-primary" type="submit" name="submit">Tambah ke Lelang</button>
-                </div>
-            </form>
+           <form method="POST" class="mb-4">
+    <div class="dropdown-checkbox" id="dropdownCheckbox">
+        <div class="dropdown-btn" onclick="toggleDropdown()">-- Pilih Barang --</div>
+        <div class="dropdown-list">
+            <label>
+                <input type="checkbox" id="checkAll"> Pilih Semua
+            </label>
+            <?php mysqli_data_seek($barang, 0); while ($b = mysqli_fetch_assoc($barang)) { ?>
+                <label>
+                    <input type="checkbox" name="id_barang[]" class="item-checkbox" value="<?= $b['id_barang']; ?>">
+                    <?= $b['nama_barang']; ?>
+                </label>
+            <?php } ?>
+        </div>
+    </div>
+    <button class="btn btn-primary mt-2" type="submit" name="submit">Tambah ke Lelang</button>
+</form>
+
+
 
             <!-- Tabel Lelang -->
             <table class="table table-bordered">
@@ -200,5 +253,36 @@ JOIN tb_barang ON tb_lelang.id_barang = tb_barang.id_barang");
             }
         }
     </script>
+
+    <script>
+    const pilihSemua = document.getElementById("pilihSemua");
+    const checkboxBarang = document.querySelectorAll(".checkbox-barang");
+
+    pilihSemua.addEventListener("change", function() {
+        checkboxBarang.forEach(cb => cb.checked = this.checked);
+    });
+</script>
+
+<script>
+    function toggleDropdown() {
+        document.getElementById("dropdownCheckbox").classList.toggle("open");
+    }
+
+    // Pilih semua checkbox
+    document.getElementById("checkAll").addEventListener("change", function () {
+        const checkboxes = document.querySelectorAll(".item-checkbox");
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    // Tutup dropdown jika klik di luar
+    window.addEventListener('click', function(e) {
+        const box = document.getElementById("dropdownCheckbox");
+        if (!box.contains(e.target)) {
+            box.classList.remove("open");
+        }
+    });
+</script>
+
+
 </body>
 </html>

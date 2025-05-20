@@ -42,6 +42,7 @@ $queryRiwayat = $koneksi->query("
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  
 </head>
 
 <body>
@@ -63,19 +64,34 @@ $queryRiwayat = $koneksi->query("
                 <p><strong>Penawaran Tertinggi:</strong> Rp<?= number_format($tertinggi, 0, ',', '.') ?></p>
 
                 <?php if ($data['status'] === 'dibuka'): ?>
-                    <form action="prosesBid.php" method="POST">
-                        <input type="hidden" name="id_barang" value="<?= $id_barang ?>">
-                        <input type="hidden" name="id_lelang" value="<?= $data['id_lelang'] ?>">
-                        <div class="mb-3">
-                            <label for="penawaran" class="form-label">Masukkan Penawaran Anda</label>
-                            <?php 
-    $min_penawaran = max($data['harga_awal'], $tertinggi + 1);
-?>
-<input type="number" name="penawaran_harga" class="form-control" required min="<?= $min_penawaran ?>">
+                    <form action="prosesBid.php" method="POST" id="formPenawaran">
+    <input type="hidden" name="id_barang" value="<?= $id_barang ?>">
+    <input type="hidden" name="id_lelang" value="<?= $data['id_lelang'] ?>">
 
-                        </div>
-                        <button type="submit" class="btn btn-success">Tawar Sekarang</button>
-                    </form>
+    <?php 
+        $min_penawaran = max($data['harga_awal'], $tertinggi + 1);
+    ?>
+
+    <div class="mb-3">
+        <label for="penawaranHarga" class="form-label">Masukkan Penawaran Anda</label>
+        <input 
+            type="number" 
+            name="penawaran_harga" 
+            class="form-control" 
+            id="penawaranHarga"
+            required 
+            min="<?= $min_penawaran ?>"
+        >
+        <!-- ALERT, default hidden dengan class d-none -->
+        <div class="form-text text-danger d-none" id="alertPenawaran">
+            Pastikan tawaran anda melebihi jumlah harga awal
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Tawar Sekarang</button>
+</form>
+
+
                 <?php else: ?>
                     <div class="alert alert-warning">Lelang telah ditutup. Tidak bisa menawar lagi.</div>
                 <?php endif; ?>
@@ -182,6 +198,26 @@ document.addEventListener('DOMContentLoaded', function(){
     }, { passive: false });
 });
 </script>
+
+<!-- Script validasi penawaran -->
+<script>
+document.getElementById('formPenawaran').addEventListener('submit', function(e) {
+    const input = document.getElementById('penawaranHarga');
+    const alert = document.getElementById('alertPenawaran');
+    const min = parseInt(input.min);
+    const value = parseInt(input.value);
+
+    if (value < min) {
+        e.preventDefault(); // hentikan submit
+        alert.classList.remove('d-none'); // tampilkan alert
+        input.classList.add('is-invalid');
+    } else {
+        alert.classList.add('d-none'); // sembunyikan kalau valid
+        input.classList.remove('is-invalid');
+    }
+});
+</script>
+
 
     <!-- Footer -->
   <?php include 'footer.php'; ?>
