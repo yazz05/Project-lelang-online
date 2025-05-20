@@ -52,7 +52,7 @@ $queryRiwayat = $koneksi->query("
    <div class="container mt-5" style="padding-top: 80px;">
         <div class="row">
             <div class="col-md-5">
-                <img src="<?= htmlspecialchars($data['foto_barang']) ?>" class="img-fluid rounded">
+                <img src="<?= htmlspecialchars($data['foto_barang']) ?>" class="img-fluid rounded" id="zoomable-image" style="cursor:pointer;">
             </div>
             <div class="col-md-7">
                 <h2><?= htmlspecialchars($data['nama_barang']) ?></h2>
@@ -68,7 +68,11 @@ $queryRiwayat = $koneksi->query("
                         <input type="hidden" name="id_lelang" value="<?= $data['id_lelang'] ?>">
                         <div class="mb-3">
                             <label for="penawaran" class="form-label">Masukkan Penawaran Anda</label>
-                            <input type="number" name="penawaran_harga" class="form-control" required min="<?= $tertinggi + 1 ?>">
+                            <?php 
+    $min_penawaran = max($data['harga_awal'], $tertinggi + 1);
+?>
+<input type="number" name="penawaran_harga" class="form-control" required min="<?= $min_penawaran ?>">
+
                         </div>
                         <button type="submit" class="btn btn-success">Tawar Sekarang</button>
                     </form>
@@ -101,6 +105,83 @@ $queryRiwayat = $koneksi->query("
         </table>
     </div>
 
+    <!-- Modal Zoom (taruh ini sebelum </body>) -->
+<div id="zoom-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+    background-color:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1050;">
+    <div id="zoom-overlay" style="position:absolute; width:100%; height:100%; cursor:pointer;"></div>
+    <img id="zoomed-image" src="" alt="Zoomed Image" style="max-width:90%; max-height:90%; border-radius:8px; box-shadow:0 0 15px #000;">
+    <button id="close-zoom" title="Tutup" 
+        style="position:absolute; top:20px; right:30px; font-size:2rem; color:white; background:none; border:none; cursor:pointer;">&times;</button>
+</div>
+
+<!-- Script zoom -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const originalImg = document.getElementById('zoomable-image');
+    const modal = document.getElementById('zoom-modal');
+    const modalImg = document.getElementById('zoomed-image');
+    const overlay = document.getElementById('zoom-overlay');
+    const closeBtn = document.getElementById('close-zoom');
+
+    if (!originalImg || !modal || !modalImg || !overlay || !closeBtn) {
+        console.error("Elemen modal atau gambar tidak ditemukan");
+        return;
+    }
+
+    let scale = 1;
+    const scaleStep = 0.1;
+    const minScale = 1;
+    const maxScale = 5;
+
+    function resetZoom() {
+        scale = 1;
+        modalImg.style.transform = `scale(${scale})`;
+        modalImg.style.cursor = 'zoom-in';
+    }
+
+    originalImg.style.cursor = 'pointer';
+    originalImg.addEventListener('click', function(){
+        modal.style.display = 'flex';
+        modal.style.flexDirection = 'column';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modalImg.src = originalImg.src;
+        resetZoom();
+    });
+
+    overlay.addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    function closeModal(){
+        modal.style.display = 'none';
+    }
+
+    modalImg.addEventListener('wheel', function(e){
+        e.preventDefault();
+        if (e.deltaY < 0) {
+            scale += scaleStep;
+            if(scale > maxScale) scale = maxScale;
+        } else {
+            scale -= scaleStep;
+            if(scale < minScale) scale = minScale;
+        }
+        modalImg.style.transform = `scale(${scale})`;
+        modalImg.style.cursor = scale > 1 ? 'zoom-out' : 'zoom-in';
+    });
+
+    modalImg.addEventListener('click', function(){
+        if(scale > 1){
+            resetZoom();
+        } else {
+            closeModal();
+        }
+    });
+
+    modal.addEventListener('wheel', function(e){
+        e.preventDefault();
+    }, { passive: false });
+});
+</script>
 
     <!-- Footer -->
   <?php include 'footer.php'; ?>

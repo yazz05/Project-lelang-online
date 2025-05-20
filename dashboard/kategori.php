@@ -33,16 +33,33 @@ date_default_timezone_set('Asia/Jakarta');
       background-color: transparent;
     }
 
+    .kategori-section .d-flex > div {
+  margin-right: 90px;
+  /* supaya jarak antar kartu */
+}
+
     .kategori-title {
       padding: 1rem;
       font-size: 1.5rem;
       font-weight: bold;
     }
 
-    .card img {
-      height: 180px;
-      object-fit: cover;
-    }
+    .card {
+  width: 320px;          /* fix lebar card sama dengan gambar */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+   .card img {
+  width: 320px;          /* lebar fix */
+  height: auto;          /* tinggi mengikuti rasio */
+  aspect-ratio: 16 / 9;  /* ini CSS modern buat ratio 16:9 */
+  object-fit: cover;
+  display: block;
+}
 
     html {
       scroll-behavior: smooth;

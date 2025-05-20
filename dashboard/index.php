@@ -47,41 +47,43 @@ if (!isset($_SESSION['nama'])) {
     </div>
   </div>
 
-  <p class="h6" style="margin-top: 100px; margin-bottom: 100px; text-align: center;">Temukan Harga Terbaik,  <small class="text-body-secondary h6">Raih Barang Impianmu.</small></p>
+  <p class="h4" style="margin-top: 100px; margin-bottom: 100px; text-align: center;">Temukan Harga Terbaik,  <small class="text-body-secondary h4">Raih Barang Impianmu.</small></p>
   </section>
 
   <!-- SECTION 1: Kategori Populer -->
 <section class="py-5">
   <div class="container">
-    <h4 class="text-center mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Kategori Populer</h4>
+    <h3 class="text-center mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Kategori Populer</h4>
     <div class="d-flex flex-wrap justify-content-center gap-4">
       <div class="text-center">
-        <img src="#" alt="Elektronik" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <img src="img/2.jpg" alt="Elektronik" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
         <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Elektronik</p>
       </div>
       <div class="text-center">
-        <img src="#" alt="Furnitur" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <img src="img/3.jpg" alt="Furnitur" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
         <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Furnitur</p>
       </div>
       <div class="text-center">
-        <img src="#" alt="Pakaian" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <img src="img/4.jpg" alt="Pakaian" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
         <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Pakaian</p>
       </div>
       <div class="text-center">
-        <img src="#" alt="Alat" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <img src="img/5.jpg" alt="Alat" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
         <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Alat</p>
       </div>
       <div class="text-center">
-        <img src="#" alt="Kendaraan" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <img src="img/6.jpg" alt="Kendaraan" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
         <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Kendaraan</p>
       </div>
       <div class="text-center">
-        <img src="#" alt="Barang Lainnya" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+        <img src="img/7.jpg" alt="Barang Lainnya" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
         <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Barang Lainnya</p>
       </div>
     </div>
   </div>
 </section>
+
+
 
 <!-- SECTION 2: Banner Shopping Info -->
 <section class="py-4">
