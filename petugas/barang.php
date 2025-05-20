@@ -101,7 +101,8 @@ if (isset($_GET['tanggal']) && !empty($_GET['tanggal'])) {
         .dashboard-title {
             font-size: 30px;
             font-weight: bold;
-            color: #fff;
+            color: #2a7fc1;
+            margin-bottom: 30px;
         }
 
         .content {

@@ -264,19 +264,19 @@ $stmt->close();
             padding-bottom: 10px;
         }
 
-       .item-image {
-    width: 100%;
-    max-width: 1280px;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    height: auto;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
+        .item-image {
+            width: 100%;
+            max-width: 1280px;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            height: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
 
 
@@ -312,49 +312,53 @@ $stmt->close();
         }
 
         #zoom-modal {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1050;
-    /* awalnya sembunyi */
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+            /* awalnya sembunyi */
+        }
 
-#zoom-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8);
-    z-index: 1040;
-}
+        #zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1040;
+        }
 
-#zoomed-image {
-    max-width: 90vw;
-    max-height: 90vh;
-    object-fit: contain;
-    cursor: zoom-in;
-    transition: transform 0.2s ease;
-    z-index: 1051;
-    position: relative;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(255,255,255,0.3);
-}
+        #zoomed-image {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            cursor: zoom-in;
+            transition: transform 0.2s ease;
+            z-index: 1051;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
 
-#close-zoom {
-    position: fixed;
-    top: 20px;
-    right: 30px;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 1060;
-    user-select: none;
-}
-
-
+        #close-zoom {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1060;
+            user-select: none;
+        }
     </style>
 </head>
 
@@ -381,12 +385,18 @@ $stmt->close();
             </div>
 
             <?php if ($penawaran_tertinggi) : ?>
-                <div class="penawaran-tertinggi">
-                    <h5><strong>Penawaran Tertinggi:</strong></h5>
-                    <p><strong>Nama:</strong> <?= htmlspecialchars($penawaran_tertinggi['nama_lengkap']); ?></p>
-                    <p><strong>Penawaran:</strong> Rp<?= number_format($penawaran_tertinggi['penawaran_harga'], 0, ',', '.'); ?></p>
+                <div class="penawaran-tertinggi d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h5><strong>Penawaran Tertinggi:</strong></h5>
+                        <p><strong>Nama:</strong> <?= htmlspecialchars($penawaran_tertinggi['nama_lengkap']); ?></p>
+                        <p><strong>Penawaran:</strong> Rp<?= number_format($penawaran_tertinggi['penawaran_harga'], 0, ',', '.'); ?></p>
+                    </div>
+                    <a href="kontakPemenang.php?id_lelang=<?= $id_lelang ?>&id_user=<?= $penawaran_tertinggi['id_user']; ?>" class="btn btn-primary mt-3 mt-md-0">
+                        Kontak Pemenang
+                    </a>
                 </div>
             <?php endif; ?>
+
         </div>
 
         <div class="container-fluid table-container">
@@ -423,78 +433,80 @@ $stmt->close();
 
     <!-- Semua konten utama (gambar, deskripsi, tabel, dll) -->
 
-<!-- Modal Zoom -->
-<div id="zoom-modal" style="display:none;">
-    <div id="zoom-overlay"></div>
-    <img id="zoomed-image" src="" alt="Zoomed Image" />
-    <button id="close-zoom" title="Tutup">&times;</button>
-</div>
+    <!-- Modal Zoom -->
+    <div id="zoom-modal" style="display:none;">
+        <div id="zoom-overlay"></div>
+        <img id="zoomed-image" src="" alt="Zoomed Image" />
+        <button id="close-zoom" title="Tutup">&times;</button>
+    </div>
 
-<!-- Script zoom -->
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-    const originalImg = document.getElementById('zoomable-image');
-    const modal = document.getElementById('zoom-modal');
-    const modalImg = document.getElementById('zoomed-image');
-    const overlay = document.getElementById('zoom-overlay');
-    const closeBtn = document.getElementById('close-zoom');
+    <!-- Script zoom -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const originalImg = document.getElementById('zoomable-image');
+            const modal = document.getElementById('zoom-modal');
+            const modalImg = document.getElementById('zoomed-image');
+            const overlay = document.getElementById('zoom-overlay');
+            const closeBtn = document.getElementById('close-zoom');
 
-    if (!originalImg || !modal || !modalImg || !overlay || !closeBtn) {
-        console.error("Elemen modal atau gambar tidak ditemukan");
-        return;
-    }
+            if (!originalImg || !modal || !modalImg || !overlay || !closeBtn) {
+                console.error("Elemen modal atau gambar tidak ditemukan");
+                return;
+            }
 
-    let scale = 1;
-    const scaleStep = 0.1;
-    const minScale = 1;
-    const maxScale = 5;
+            let scale = 1;
+            const scaleStep = 0.1;
+            const minScale = 1;
+            const maxScale = 5;
 
-    function resetZoom() {
-        scale = 1;
-        modalImg.style.transform = `scale(${scale})`;
-        modalImg.style.cursor = 'zoom-in';
-    }
+            function resetZoom() {
+                scale = 1;
+                modalImg.style.transform = `scale(${scale})`;
+                modalImg.style.cursor = 'zoom-in';
+            }
 
-    originalImg.style.cursor = 'pointer';
-    originalImg.addEventListener('click', function(){
-        modal.style.display = 'flex';
-        modalImg.src = originalImg.src;
-        resetZoom();
-    });
+            originalImg.style.cursor = 'pointer';
+            originalImg.addEventListener('click', function() {
+                modal.style.display = 'flex';
+                modalImg.src = originalImg.src;
+                resetZoom();
+            });
 
-    overlay.addEventListener('click', closeModal);
-    closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', closeModal);
+            closeBtn.addEventListener('click', closeModal);
 
-    function closeModal(){
-        modal.style.display = 'none';
-    }
+            function closeModal() {
+                modal.style.display = 'none';
+            }
 
-    modalImg.addEventListener('wheel', function(e){
-        e.preventDefault();
-        if (e.deltaY < 0) {
-            scale += scaleStep;
-            if(scale > maxScale) scale = maxScale;
-        } else {
-            scale -= scaleStep;
-            if(scale < minScale) scale = minScale;
-        }
-        modalImg.style.transform = `scale(${scale})`;
-        modalImg.style.cursor = scale > 1 ? 'zoom-out' : 'zoom-in';
-    });
+            modalImg.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    scale += scaleStep;
+                    if (scale > maxScale) scale = maxScale;
+                } else {
+                    scale -= scaleStep;
+                    if (scale < minScale) scale = minScale;
+                }
+                modalImg.style.transform = `scale(${scale})`;
+                modalImg.style.cursor = scale > 1 ? 'zoom-out' : 'zoom-in';
+            });
 
-    modalImg.addEventListener('click', function(){
-        if(scale > 1){
-            resetZoom();
-        } else {
-            closeModal();
-        }
-    });
+            modalImg.addEventListener('click', function() {
+                if (scale > 1) {
+                    resetZoom();
+                } else {
+                    closeModal();
+                }
+            });
 
-    modal.addEventListener('wheel', function(e){
-        e.preventDefault();
-    }, { passive: false });
-});
-</script>
+            modal.addEventListener('wheel', function(e) {
+                e.preventDefault();
+            }, {
+                passive: false
+            });
+        });
+    </script>
 
 
 

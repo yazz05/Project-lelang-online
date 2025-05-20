@@ -22,8 +22,8 @@
           <ul class="list-unstyled" style="font-family: 'Poppins', sans-serif; font-size: 1rem; color: #dcdcdc;">
             <li><a href="index.php" style="color: #dcdcdc; text-decoration: none;">Home</a></li>
             <li><a href="lelang.php" style="color: #dcdcdc; text-decoration: none;">Lelang</a></li>
-            <li><a href="#" style="color: #dcdcdc; text-decoration: none;">Kategori</a></li>
-            <li><a href="about.php" style="color: #dcdcdc; text-decoration: none;">Tentang Kami</a></li>
+            <li><a href="kategori.php" style="color: #dcdcdc; text-decoration: none;">Kategori</a></li>
+            <li><a href="aboutUs.php" style="color: #dcdcdc; text-decoration: none;">Tentang Kami</a></li>
           </ul>
         </div>
 

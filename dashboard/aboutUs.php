@@ -13,7 +13,7 @@ if (!isset($_SESSION['nama'])) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About Me - LeLon!</title>
+  <title>About Us - LeLon!</title>
 
   <!-- Import Google Fonts Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
@@ -78,7 +78,7 @@ if (!isset($_SESSION['nama'])) {
   <section class="about-me-container">
     <img src="img/profile.jpg" alt="Profile Photo" class="about-me-photo" />
     <div class="about-me-header">
-      <h1>About Me</h1>
+      <h1>About Us</h1>
     </div>
     <div class="about-me-content">
       <p>Hello! I’m <strong><?php echo htmlspecialchars($_SESSION['nama']); ?></strong>, a passionate web developer who loves crafting beautiful, functional websites.</p>
