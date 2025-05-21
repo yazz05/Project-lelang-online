@@ -30,7 +30,9 @@ $data_petugas = mysqli_fetch_assoc($query_petugas);
 if ($data_petugas) {
     $_SESSION['username'] = $data_petugas['username'];
     $_SESSION['nama'] = $data_petugas['nama_petugas'];
-    $_SESSION['level'] = $data_petugas['level']; // ambil dari tb_level
+    $_SESSION['level'] = $data_petugas['level']; // 'administrator' atau 'petugas'
+    $_SESSION['id_petugas'] = $data_petugas['id_petugas'];
+    $_SESSION['id_level'] = $data_petugas['id_level']; // 1 atau 2
 
     // Arahkan sesuai level-nya
     if ($data_petugas['level'] == 'administrator') {

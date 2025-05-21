@@ -6,6 +6,27 @@ if (!isset($_SESSION['nama'])) {
   header("Location: login.php");
   exit();
 }
+
+$koneksi = new mysqli("localhost", "root", "", "lelang_online");
+if ($koneksi->connect_error) {
+  die("Koneksi gagal: " . $koneksi->connect_error);
+}
+
+$id_user = $_SESSION['id_user'] ?? 0;
+$notifikasi = [];
+$jumlah_notif = 0;
+
+if ($id_user) {
+  $stmt = $koneksi->prepare("SELECT id_notif, pesan, created_at FROM tb_notif WHERE id_user = ? ORDER BY created_at DESC LIMIT 5");
+  $stmt->bind_param("i", $id_user);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $notifikasi = $result->fetch_all(MYSQLI_ASSOC);
+  $jumlah_notif = count($notifikasi);
+  $stmt->close();
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -47,63 +68,63 @@ if (!isset($_SESSION['nama'])) {
     </div>
   </div>
 
-  <p class="h4" style="margin-top: 100px; margin-bottom: 100px; text-align: center;">Temukan Harga Terbaik,  <small class="text-body-secondary h4">Raih Barang Impianmu.</small></p>
+  <p class="h4" style="margin-top: 100px; margin-bottom: 100px; text-align: center;">Temukan Harga Terbaik, <small class="text-body-secondary h4">Raih Barang Impianmu.</small></p>
   </section>
 
   <!-- SECTION 1: Kategori Populer -->
-<section class="py-5">
-  <div class="container">
-    <h3 class="text-center mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Kategori Populer</h4>
-    <div class="d-flex flex-wrap justify-content-center gap-4">
-      <div class="text-center">
-        <img src="img/2.jpg" alt="Elektronik" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
-        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Elektronik</p>
-      </div>
-      <div class="text-center">
-        <img src="img/3.jpg" alt="Furnitur" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
-        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Furnitur</p>
-      </div>
-      <div class="text-center">
-        <img src="img/4.jpg" alt="Pakaian" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
-        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Pakaian</p>
-      </div>
-      <div class="text-center">
-        <img src="img/5.jpg" alt="Alat" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
-        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Alat</p>
-      </div>
-      <div class="text-center">
-        <img src="img/6.jpg" alt="Kendaraan" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
-        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Kendaraan</p>
-      </div>
-      <div class="text-center">
-        <img src="img/7.jpg" alt="Barang Lainnya" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
-        <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Barang Lainnya</p>
+  <section class="py-5">
+    <div class="container">
+      <h3 class="text-center mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Kategori Populer</h4>
+        <div class="d-flex flex-wrap justify-content-center gap-4">
+          <div class="text-center">
+            <img src="img/2.jpg" alt="Elektronik" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+            <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Elektronik</p>
+          </div>
+          <div class="text-center">
+            <img src="img/3.jpg" alt="Furnitur" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+            <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Furnitur</p>
+          </div>
+          <div class="text-center">
+            <img src="img/4.jpg" alt="Pakaian" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+            <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Pakaian</p>
+          </div>
+          <div class="text-center">
+            <img src="img/5.jpg" alt="Alat" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+            <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Alat</p>
+          </div>
+          <div class="text-center">
+            <img src="img/6.jpg" alt="Kendaraan" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+            <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Kendaraan</p>
+          </div>
+          <div class="text-center">
+            <img src="img/7.jpg" alt="Barang Lainnya" style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f5f5f5; padding: 10px;">
+            <p class="mt-2 h6" style="font-family: 'Poppins', sans-serif;">Barang Lainnya</p>
+          </div>
+        </div>
+    </div>
+  </section>
+
+
+
+  <!-- SECTION 2: Banner Shopping Info -->
+  <section class="py-4">
+    <div class="container">
+      <div class="bg-light d-flex flex-column flex-md-row justify-content-between align-items-center p-4 rounded-4">
+        <div>
+          <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; margin-bottom: 5px;">Belanja jadi mudah</h5>
+          <p style="font-family: 'Poppins', sans-serif; margin: 0; font-size: 0.95rem; color: #555;">
+            Nikmati keandalan, pengiriman aman, dan pengembalian tanpa repot.
+          </p>
+        </div>
+        <a href="kategori.php" class="btn btn-dark mt-3 mt-md-0 rounded-pill px-4" style="font-weight: 600; font-size: 0.95rem;">
+          Mulai sekarang
+        </a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 
-
-<!-- SECTION 2: Banner Shopping Info -->
-<section class="py-4">
-  <div class="container">
-    <div class="bg-light d-flex flex-column flex-md-row justify-content-between align-items-center p-4 rounded-4">
-      <div>
-        <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; margin-bottom: 5px;">Belanja jadi mudah</h5>
-        <p style="font-family: 'Poppins', sans-serif; margin: 0; font-size: 0.95rem; color: #555;">
-          Nikmati keandalan, pengiriman aman, dan pengembalian tanpa repot.
-        </p>
-      </div>
-      <a href="kategori.php" class="btn btn-dark mt-3 mt-md-0 rounded-pill px-4" style="font-weight: 600; font-size: 0.95rem;">
-        Mulai sekarang
-      </a>
-    </div>
-  </div>
-</section>
-
-
-   <!-- Full-width Banner Section with Overlay -->
+  <!-- Full-width Banner Section with Overlay -->
   <section class="position-relative" style="height: 400px; overflow: hidden; margin-top: 100px;">
     <!-- Gambar Banner -->
     <img src="img/bannerLelon1.jpg" alt="Banner" class="w-100 h-100 object-fit-cover">
