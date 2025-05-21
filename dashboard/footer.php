@@ -36,7 +36,7 @@
           <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
             <i class="bi bi-twitter"></i>
           </a>
-          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
+          <a href="https://www.instagram.com/lelon.official_dummy?igsh=ZzdjdGZveHFsaHN2" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">
             <i class="bi bi-instagram"></i>
           </a>
           <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem; text-decoration: none;">

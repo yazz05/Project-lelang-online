@@ -23,36 +23,52 @@ if (!isset($_SESSION['nama'])) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
   <style>
-
-    .about-me-container {
-      max-width: 800px;
-      margin: 100px auto 150px auto;
-      padding: 30px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgb(0 0 0 / 0.1);
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
     }
 
-    .about-me-header h1 {
-      font-weight: 600;
-      font-size: 2.5rem;
-      color: #222;
-      margin-bottom: 20px;
-      text-align: center;
+    .about-me-container {
+      max-width: 1400px; /* atau lebih besar lagi */
+      margin: 100px auto 150px auto;
+      padding: 50px 60px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .about-me-content {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 40px;
+      flex-wrap: nowrap; /* <--- PENTING: agar tidak turun ke bawah */
     }
 
     .about-me-photo {
-      display: block;
-      max-width: 180px;
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 50%;
-      margin: 0 auto 30px auto;
-      box-shadow: 0 0 10px rgb(0 0 0 / 0.15);
+      width: 250px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 0;
+      box-shadow: none;
+      margin-top: -10px; /* naikkan sedikit */
     }
 
-    .about-me-content p {
+    .about-me-text h1 {
+      font-weight: 800;
+      font-size: 2.8rem;
+      color: #222;
+      margin-bottom: 30px;
+    }
+
+    .about-me-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .about-me-text p {
       font-weight: 400;
       font-size: 1.1rem;
       color: #555;
@@ -60,13 +76,28 @@ if (!isset($_SESSION['nama'])) {
       margin-bottom: 1.3rem;
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       .about-me-container {
-        margin: 60px 15px 100px 15px;
-        padding: 20px;
+        padding: 30px 20px;
+      }
+
+      .about-me-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .about-me-photo {
+        width: 280px;
+        height: auto;
+        object-fit: contain;
+        flex-shrink: 0; /* <--- Biar gambar gak ikut menyusut */
+      }
+
+      .about-me-text {
+        text-align: left;
       }
     }
-    
   </style>
 </head>
 
@@ -76,22 +107,27 @@ if (!isset($_SESSION['nama'])) {
   <?php include 'navbar.php'; ?>
 
   <section class="about-me-container">
-    <img src="img/profile.jpg" alt="Profile Photo" class="about-me-photo" />
     <div class="about-me-header">
-      <h1>About Us</h1>
     </div>
     <div class="about-me-content">
-      <p>Hello! I’m <strong><?php echo htmlspecialchars($_SESSION['nama']); ?></strong>, a passionate web developer who loves crafting beautiful, functional websites.</p>
-      <p>With a background in design and programming, I aim to build intuitive and user-friendly experiences. When I’m not coding, I enjoy reading, traveling, and exploring new technologies.</p>
-      <p>Feel free to connect with me or explore more of my projects here on LeLon!</p>
+      <img src="../maskot/maskotHi.png" alt="Profile Photo" class="about-me-photo" />
+
+      <div class="about-me-text">
+        <h1>Tentang Kami</h1>
+        <p>Selamat datang di LeLon – Platform Lelang Online Terpercaya! Kami adalah marketplace lelang digital yang menghubungkan penjual dan pembeli dalam transaksi yang aman, cepat, dan transparan.</p>
+        <p>Di LeLon, siapa pun dapat mengikuti lelang berbagai produk menarik, mulai dari barang elektronik, fashion, hingga koleksi unik – semua hanya dengan beberapa klik.</p>
+        <p>Kami percaya bahwa pengalaman lelang harus menyenangkan dan adil. Dengan sistem real-time, tampilan yang user-friendly, dan dukungan tim profesional, kami memastikan setiap pengguna merasa nyaman dan aman dalam setiap proses.</p>
+        <p>Bergabunglah dengan komunitas LeLon hari ini dan jadilah bagian dari revolusi belanja online melalui sistem lelang yang modern dan menyenangkan.</p>
+      </div>
     </div>
+
   </section>
 
   <!-- Footer -->
   <?php include 'footer.php'; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+  <script>
     function logoutAlert() {
       if (confirm("Yakin mau logout?")) {
         window.location.href = "logout.php";
