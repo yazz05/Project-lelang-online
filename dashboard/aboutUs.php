@@ -91,6 +91,13 @@ if (!isset($_SESSION['nama'])) {
   <?php include 'footer.php'; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    function logoutAlert() {
+      if (confirm("Yakin mau logout?")) {
+        window.location.href = "logout.php";
+      }
+    }
+  </script>
 </body>
 
 </html>

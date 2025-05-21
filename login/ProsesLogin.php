@@ -43,6 +43,7 @@ if ($data_petugas) {
     exit;
 }
 
-// Jika tidak ditemukan
-echo "Login gagal. Username atau password salah.";
+// Jika tidak ditemukan di kedua tabel
+header("Location: gagalLogin.php");
+exit;
 ?>
