@@ -26,8 +26,6 @@ $notifikasi = $result->fetch_all(MYSQLI_ASSOC);
 $jumlah_notif = count($notifikasi);
 $stmt->close();
 ?>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
     <div class="container-fluid">

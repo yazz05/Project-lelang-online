@@ -127,7 +127,7 @@ if ($id_user) {
   <!-- Full-width Banner Section with Overlay -->
   <section class="position-relative" style="height: 400px; overflow: hidden; margin-top: 100px;">
     <!-- Gambar Banner -->
-    <img src="img/bannerLelon1.jpg" alt="Banner" class="w-100 h-100 object-fit-cover">
+    <img src="img/bannerHelp.png" alt="Banner" class="w-100 h-100 object-fit-cover">
 
     <!-- Overlay gelap -->
     <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.4);"></div>
@@ -136,13 +136,13 @@ if ($id_user) {
     <!-- Overlay teks di kiri -->
     <div class="position-absolute top-50 start-0 translate-middle-y ps-5 text-white" style="max-width: 600px;">
       <h2 class="fw-bold mb-3" style="font-size: 2.5rem;">
-        Get your order or your money back
+        Ayo tanya Luna!
       </h2>
       <p class="mb-4" style="font-size: 1.1rem;">
-        Shop confidently with eBay Money Back Guarantee.
+        Luna selalu ada di sisimu, dan membantu semua kendala yang anda punya seputar Lelang Online.
       </p>
-      <a href="#" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold">
-        Learn more
+      <a href="halamanFaq.php" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold">
+        Pelajari Lebih Lanjut
       </a>
     </div>
   </section>
