@@ -253,14 +253,17 @@ body {
           </select>
         </div>
        <div class="mb-3">
-  <label class="form-label">Foto Barang</label>
+  <label class="form-label d-flex align-items-center gap-2">
+  Foto Barang
+  <span class="text-muted" style="font-size: 0.85em;">(Gunakan Rasio 16:9)</span>
+</label>
+
   <input type="file" id="imageInput" class="form-control" accept="image/*" required>
   <div class="mt-3">
     <img id="preview" style="max-width: 100%; display: none;">
   </div>
- <!-- Hapus input hidden karena kita akan pakai JavaScript fetch -->
-
 </div>
+
 
         <button type="submit" name="submit" class="btn btn-primary w-100">Simpan Barang</button>
       </form>

@@ -27,7 +27,7 @@
     <div class="fw-bold text-secondary mb-2">
       <i class="fa fa-user-circle"></i> <?php echo htmlspecialchars($_SESSION['nama']); ?>
     </div>
-    <a href="#" class="btn btn-danger w-100 text-start fw-bold" onclick="logoutAlert()">
+    <a href="../petugas/logoutPetugas.php" class="btn btn-danger w-100 text-start fw-bold" onclick="logoutAlert()">
       <i class="fa fa-sign-out-alt"></i> Logout
     </a>
   </div>

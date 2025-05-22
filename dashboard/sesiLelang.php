@@ -64,12 +64,13 @@ $queryRiwayat = $koneksi->query("
                 <p><strong>Penawaran Tertinggi:</strong> Rp<?= number_format($tertinggi, 0, ',', '.') ?></p>
 
                 <?php if ($data['status'] === 'dibuka'): ?>
+                    
                     <form action="prosesBid.php" method="POST" id="formPenawaran">
                         <input type="hidden" name="id_barang" value="<?= $id_barang ?>">
                         <input type="hidden" name="id_lelang" value="<?= $data['id_lelang'] ?>">
 
                         <?php
-                        $min_penawaran = max($data['harga_awal'], $tertinggi + 1);
+                        $min_penawaran = $data['harga_awal'];
                         ?>
 
                         <div class="mb-3">
@@ -83,8 +84,8 @@ $queryRiwayat = $koneksi->query("
                                 min="<?= $min_penawaran ?>">
                             <!-- ALERT, default hidden dengan class d-none -->
                             <div class="form-text text-danger d-none" id="alertPenawaran">
-                                Pastikan tawaran anda melebihi jumlah harga awal
-                            </div>
+    Penawaran tidak boleh kurang dari harga awal (Rp<?= number_format($data['harga_awal'], 0, ',', '.') ?>)
+</div>
                         </div>
 
                         <button type="submit" class="btn btn-success">Tawar Sekarang</button>
@@ -202,21 +203,26 @@ $queryRiwayat = $koneksi->query("
 
     <!-- Script validasi penawaran -->
     <script>
-        document.getElementById('formPenawaran').addEventListener('submit', function(e) {
-            const input = document.getElementById('penawaranHarga');
-            const alert = document.getElementById('alertPenawaran');
-            const min = parseInt(input.min);
-            const value = parseInt(input.value);
+        document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('formPenawaran');
+    const input = document.getElementById('penawaranHarga');
+    const alert = document.getElementById('alertPenawaran');
 
-            if (value < min) {
-                e.preventDefault(); // hentikan submit
-                alert.classList.remove('d-none'); // tampilkan alert
-                input.classList.add('is-invalid');
-            } else {
-                alert.classList.add('d-none'); // sembunyikan kalau valid
-                input.classList.remove('is-invalid');
-            }
-        });
+    form.addEventListener('submit', function (e) {
+        const hargaAwal = parseInt(input.min); // sekarang min = harga_awal
+        const nilaiPenawaran = parseInt(input.value);
+
+        if (nilaiPenawaran < hargaAwal || isNaN(nilaiPenawaran)) {
+            e.preventDefault(); // hentikan submit
+            alert.classList.remove('d-none');
+            input.classList.add('is-invalid');
+        } else {
+            alert.classList.add('d-none');
+            input.classList.remove('is-invalid');
+        }
+    });
+});
+
     </script>
 
 
