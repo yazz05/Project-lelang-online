@@ -150,7 +150,10 @@ $queryRiwayat = $koneksi->query("
 
             function resetZoom() {
                 scale = 1;
-                modalImg.style.transform = scale(${scale});
+                modalImg.style.transform = scale($ {
+                    scale
+                });
+
                 modalImg.style.cursor = 'zoom-in';
             }
 
@@ -180,7 +183,10 @@ $queryRiwayat = $koneksi->query("
                     scale -= scaleStep;
                     if (scale < minScale) scale = minScale;
                 }
-                modalImg.style.transform = scale(${scale});
+                modalImg.style.transform = scale($ {
+                    scale
+                });
+
                 modalImg.style.cursor = scale > 1 ? 'zoom-out' : 'zoom-in';
             });
 

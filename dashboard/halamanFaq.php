@@ -122,7 +122,7 @@ if ($id_user) {
             <!-- Kolom Maskot -->
             <div class="col-md-4 mb-4 mb-md-0">
                 <div class="maskot-container">
-                    <img src="../maskot/maskotPointingWow.png" alt="Maskot Luna" class="maskot img-fluid">
+                    <img src="../maskot/maskotPointing.png" alt="Maskot Luna" class="maskot img-fluid">
                     <div class="maskot-caption text-center">Luna disini siap menjawab pertanyaan kamu!</div>
                 </div>
             </div>

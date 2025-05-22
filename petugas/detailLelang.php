@@ -384,7 +384,7 @@ $stmt->close();
                 </p>
             </div>
 
-            <?php if ($penawaran_tertinggi) : ?>
+            <?php if ($penawaran_tertinggi && strtolower(trim($lelang['status'])) === 'ditutup') : ?>
                 <div class="penawaran-tertinggi d-flex justify-content-between align-items-center flex-wrap">
                     <div>
                         <h5><strong>Penawaran Tertinggi:</strong></h5>
@@ -507,9 +507,6 @@ $stmt->close();
             });
         });
     </script>
-
-
-
 
 </body>
 
