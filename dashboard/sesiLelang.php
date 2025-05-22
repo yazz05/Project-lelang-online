@@ -130,81 +130,79 @@ $queryRiwayat = $koneksi->query("
     </div>
 
     <!-- Script zoom -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const originalImg = document.getElementById('zoomable-image');
-            const modal = document.getElementById('zoom-modal');
-            const modalImg = document.getElementById('zoomed-image');
-            const overlay = document.getElementById('zoom-overlay');
-            const closeBtn = document.getElementById('close-zoom');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const originalImg = document.getElementById('zoomable-image');
+        const modal = document.getElementById('zoom-modal');
+        const modalImg = document.getElementById('zoomed-image');
+        const overlay = document.getElementById('zoom-overlay');
+        const closeBtn = document.getElementById('close-zoom');
 
-            if (!originalImg || !modal || !modalImg || !overlay || !closeBtn) {
-                console.error("Elemen modal atau gambar tidak ditemukan");
-                return;
-            }
+        if (!originalImg || !modal || !modalImg || !overlay || !closeBtn) {
+            console.error("Elemen modal atau gambar tidak ditemukan");
+            return;
+        }
 
-            let scale = 1;
-            const scaleStep = 0.1;
-            const minScale = 1;
-            const maxScale = 5;
+        let scale = 1;
+        const scaleStep = 0.1;
+        const minScale = 1;
+        const maxScale = 5;
 
-            function resetZoom() {
-                scale = 1;
-                modalImg.style.transform = scale($ {
-                    scale
-                });
+        // Set animasi dan origin
+        modalImg.style.transition = 'transform 0.2s ease';
+        modalImg.style.transformOrigin = 'center center';
 
-                modalImg.style.cursor = 'zoom-in';
-            }
+        function resetZoom() {
+            scale = 1;
+            modalImg.style.transform = `scale(${scale})`;
+            modalImg.style.cursor = 'zoom-in';
+        }
 
-            originalImg.style.cursor = 'pointer';
-            originalImg.addEventListener('click', function() {
-                modal.style.display = 'flex';
-                modal.style.flexDirection = 'column';
-                modal.style.justifyContent = 'center';
-                modal.style.alignItems = 'center';
-                modalImg.src = originalImg.src;
-                resetZoom();
-            });
-
-            overlay.addEventListener('click', closeModal);
-            closeBtn.addEventListener('click', closeModal);
-
-            function closeModal() {
-                modal.style.display = 'none';
-            }
-
-            modalImg.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                if (e.deltaY < 0) {
-                    scale += scaleStep;
-                    if (scale > maxScale) scale = maxScale;
-                } else {
-                    scale -= scaleStep;
-                    if (scale < minScale) scale = minScale;
-                }
-                modalImg.style.transform = scale($ {
-                    scale
-                });
-
-                modalImg.style.cursor = scale > 1 ? 'zoom-out' : 'zoom-in';
-            });
-
-            modalImg.addEventListener('click', function() {
-                if (scale > 1) {
-                    resetZoom();
-                } else {
-                    closeModal();
-                }
-            });
-
-            modal.addEventListener('wheel', function(e) {
-                e.preventDefault();
-            }, {
-                passive: false
-            });
+        originalImg.style.cursor = 'pointer';
+        originalImg.addEventListener('click', function () {
+            modal.style.display = 'flex';
+            modal.style.flexDirection = 'column';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modalImg.src = originalImg.src;
+            resetZoom();
         });
-    </script>
+
+        overlay.addEventListener('click', closeModal);
+        closeBtn.addEventListener('click', closeModal);
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        modalImg.addEventListener('wheel', function (e) {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                scale += scaleStep;
+                if (scale > maxScale) scale = maxScale;
+            } else {
+                scale -= scaleStep;
+                if (scale < minScale) scale = minScale;
+            }
+            modalImg.style.transform = `scale(${scale})`;
+            modalImg.style.cursor = scale > 1 ? 'zoom-out' : 'zoom-in';
+        });
+
+        modalImg.addEventListener('click', function () {
+            if (scale > 1) {
+                resetZoom();
+            } else {
+                closeModal();
+            }
+        });
+
+        // Mencegah scroll body saat zoom aktif
+        modal.addEventListener('wheel', function (e) {
+            e.preventDefault();
+        }, { passive: false });
+    });
+</script>
+
 
     <!-- Script validasi penawaran -->
     <script>

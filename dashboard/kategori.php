@@ -45,11 +45,11 @@ $stmt->close();
       margin: 2rem 0 1rem;
     }
 
-    .card img {
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      cursor: zoom-in;
-    }
+   .card img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
 
     .scroll-container {
       overflow-x: auto;
@@ -155,10 +155,11 @@ $stmt->close();
 
     foreach ($kategoriList as $kategori) {
       $idKategori = strtolower(str_replace(' ', '', $kategori));
-      $query = "SELECT l., b. FROM tb_lelang l 
-                JOIN tb_barang b ON l.id_barang = b.id_barang 
-                WHERE b.kategori = ? AND l.status = 'dibuka' 
-                ORDER BY l.tgl_lelang DESC";
+      $query = "SELECT l.*, b.* FROM tb_lelang l 
+          JOIN tb_barang b ON l.id_barang = b.id_barang 
+          WHERE b.kategori = ? AND l.status = 'dibuka' 
+          ORDER BY l.tgl_lelang DESC";
+
       $stmt = $koneksi->prepare($query);
       $stmt->bind_param("s", $kategori);
       $stmt->execute();
@@ -170,7 +171,9 @@ $stmt->close();
         echo '<div class="scroll-container">';
         while ($row = $result->fetch_assoc()) {
           echo '<div class="card" style="min-width: 250px;">';
-          echo '<img src="' . htmlspecialchars($row['foto_barang']) . '" class="card-img-top" alt="' . htmlspecialchars($row['nama_barang']) . '" onclick="showImageModal(this.src)">';
+       echo '<img src="' . htmlspecialchars($row['foto_barang']) . '" class="card-img-top" alt="' . htmlspecialchars($row['nama_barang']) . '">';
+
+
           echo '<div class="card-body">';
           echo '<h5 class="card-title">' . htmlspecialchars($row['nama_barang']) . '</h5>';
           echo '<p class="card-text">' . htmlspecialchars($row['deskripsi_barang']) . '</p>';
@@ -192,16 +195,6 @@ $stmt->close();
     </div>
   </footer>
 
-  <!-- Modal Zoom Gambar -->
-  <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0">
-          <img id="modalImage" src="" alt="Preview" class="img-fluid rounded-3 w-100">
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Script -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -212,11 +205,6 @@ $stmt->close();
       }
     }
 
-    function showImageModal(src) {
-      const modalImg = document.getElementById("modalImage");
-      modalImg.src = src;
-      new bootstrap.Modal(document.getElementById('imageModal')).show();
-    }
   </script>
 </body>
 
