@@ -12,14 +12,14 @@ $id_user = $_SESSION['id_user'];
 // Mark notification as read if ID is provided
 if (isset($_GET['id_notif'])) {
   $id_notif = intval($_GET['id_notif']);
-  
+
   // Verify notification belongs to user
   $stmt = $koneksi->prepare("UPDATE tb_notif SET status_baca = 'terbaca' 
                             WHERE id_notif = ? AND id_user = ?");
   $stmt->bind_param("ii", $id_notif, $id_user);
   $stmt->execute();
   $stmt->close();
-  
+
   // Get the specific notification
   $stmt = $koneksi->prepare("SELECT * FROM tb_notif WHERE id_notif = ?");
   $stmt->bind_param("i", $id_notif);
@@ -39,6 +39,7 @@ $stmt->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,14 +47,15 @@ $stmt->close();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+
 <body>
   <?php include 'navbar.php'; ?>
-  
+
   <div class="container mt-5 pt-4">
     <div class="row justify-content-center">
       <div class="col-md-8">
         <h3 class="mb-4">Notifikasi Anda</h3>
-        
+
         <?php if (isset($notif)): ?>
           <!-- Single Notification Detail -->
           <div class="card mb-4">
@@ -68,12 +70,12 @@ $stmt->close();
             </div>
           </div>
         <?php endif; ?>
-        
+
         <!-- All Notifications List -->
         <div class="list-group">
           <?php foreach ($all_notifications as $notification): ?>
-            <a href="pesan.php?id_notif=<?= $notification['id_notif'] ?>" 
-               class="list-group-item list-group-item-action <?= $notification['status_baca'] === 'belum terbaca' ? 'fw-bold' : '' ?>">
+            <a href="pesan.php?id_notif=<?= $notification['id_notif'] ?>"
+              class="list-group-item list-group-item-action <?= $notification['status_baca'] === 'belum terbaca' ? 'fw-bold' : '' ?>">
               <div class="d-flex w-100 justify-content-between">
                 <p class="mb-1"><?= htmlspecialchars(substr($notification['pesan'], 0, 100)) ?></p>
                 <small><?= date('d-m-Y H:i', strtotime($notification['created_at'])) ?></small>
@@ -88,6 +90,15 @@ $stmt->close();
     </div>
   </div>
 
+  <script>
+    function logoutAlert() {
+      if (confirm("Yakin mau logout?")) {
+        window.location.href = "logout.php";
+      }
+    }
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
