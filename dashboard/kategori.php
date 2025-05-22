@@ -71,12 +71,6 @@ $stmt->close();
       background: #555;
     }
 
-    footer {
-      background-color: #212529;
-      color: white;
-      padding: 1rem 0;
-      margin-top: 2rem;
-    }
   </style>
 </head>
 
@@ -189,11 +183,7 @@ $stmt->close();
   </div>
 
   <!-- Footer -->
-  <footer class="text-center">
-    <div class="container py-4">
-      <p>&copy; <?= date('Y') ?> LeLon. All Rights Reserved.</p>
-    </div>
-  </footer>
+    <?php include 'footer.php'; ?>
 
 
   <!-- Script -->

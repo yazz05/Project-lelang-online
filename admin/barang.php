@@ -140,6 +140,22 @@ if (isset($_GET['tanggal']) && !empty($_GET['tanggal'])) {
         <?php include('topbar.php'); ?>
 
         <div class="content">
+            <?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= htmlspecialchars($_SESSION['success']); ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= htmlspecialchars($_SESSION['error']); ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
             <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
                 <form method="GET" class="d-flex align-items-center flex-wrap gap-2">
                     <label for="tanggal" class="mb-0">Filter Tanggal:</label>

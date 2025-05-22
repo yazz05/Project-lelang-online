@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['nama'])) {
-    header("Location: login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 
@@ -10,41 +10,42 @@ if (!$koneksi) {
     die("Koneksi gagal: " . mysqli_connect_error());
 }
 
-// Mengambil ID barang dari URL
 $id_barang = $_GET['id'] ?? null;
 
 if ($id_barang) {
-    // Query untuk menghapus data barang berdasarkan ID
-    $query = "DELETE FROM tb_barang WHERE id_barang = ?";
-    
-    // Persiapkan dan eksekusi query
-    if ($stmt = mysqli_prepare($koneksi, $query)) {
-        mysqli_stmt_bind_param($stmt, "i", $id_barang); // Bind parameter ID
-        if (mysqli_stmt_execute($stmt)) {
-            // Jika sukses menghapus, redirect ke halaman data barang
-            echo "<script>
-                    alert('Barang berhasil dihapus.');
-                    window.location.href = 'barang.php';
-                  </script>";
-        } else {
-            echo "<script>
-                    alert('Gagal menghapus barang.');
-                    window.location.href = 'barang.php';
-                  </script>";
-        }
-        mysqli_stmt_close($stmt);
-    } else {
-        echo "<script>
-                alert('Query gagal.');
-                window.location.href = 'barang.php';
-              </script>";
+    // Hapus history lelang jika ada
+    $hapusHistory = "DELETE FROM history_lelang WHERE id_barang = ?";
+    if ($stmtHistory = mysqli_prepare($koneksi, $hapusHistory)) {
+        mysqli_stmt_bind_param($stmtHistory, "i", $id_barang);
+        mysqli_stmt_execute($stmtHistory);
+        mysqli_stmt_close($stmtHistory);
     }
+
+    // Hapus data lelang jika ada
+    $hapusLelang = "DELETE FROM tb_lelang WHERE id_barang = ?";
+    if ($stmtLelang = mysqli_prepare($koneksi, $hapusLelang)) {
+        mysqli_stmt_bind_param($stmtLelang, "i", $id_barang);
+        mysqli_stmt_execute($stmtLelang);
+        mysqli_stmt_close($stmtLelang);
+    }
+
+    // Hapus barang
+    $hapusBarang = "DELETE FROM tb_barang WHERE id_barang = ?";
+    if ($stmtDelete = mysqli_prepare($koneksi, $hapusBarang)) {
+        mysqli_stmt_bind_param($stmtDelete, "i", $id_barang);
+        mysqli_stmt_execute($stmtDelete);
+        mysqli_stmt_close($stmtDelete);
+
+        // Set notifikasi sukses
+        $_SESSION['success'] = "Barang sudah dihapus.";
+    }
+
+    header("Location: barang.php");
+    exit();
 } else {
-    echo "<script>
-            alert('ID barang tidak valid.');
-            window.location.href = 'barang.php';
-          </script>";
+    $_SESSION['error'] = "Barang tidak ditemukan.";
+    header("Location: barang.php");
+    exit();
 }
 
 mysqli_close($koneksi);
-?>

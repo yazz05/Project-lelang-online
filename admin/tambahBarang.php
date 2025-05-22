@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['nama'])) {
-  header("Location: login.php");
+  header("Location: ../login/login.php");
   exit();
 }
 
@@ -17,7 +17,9 @@ if (isset($_POST['submit'])) {
 
   $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
   $max_size = 2 * 1024 * 1024;
-  $foto = $_FILES['foto_barang'];
+ $foto = $_FILES['cropped_image'] ?? null;
+
+
 
   if ($foto['error'] === 0) {
     if (in_array($foto['type'], $allowed_types)) {
@@ -59,6 +61,8 @@ date_default_timezone_set('Asia/Jakarta');
   <title>Input Barang - Admin</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+
   <style>
     * {
   margin: 0;
@@ -248,10 +252,19 @@ body {
             <option value="Barang Lainnya">Barang Lainnya</option>
           </select>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Foto Barang</label>
-          <input type="file" name="foto_barang" class="form-control" accept="image/*" required>
-        </div>
+       <div class="mb-3">
+  <label class="form-label d-flex align-items-center gap-2">
+  Foto Barang
+  <span class="text-muted" style="font-size: 0.85em;">(Gunakan Rasio 16:9)</span>
+</label>
+
+  <input type="file" id="imageInput" class="form-control" accept="image/*" required>
+  <div class="mt-3">
+    <img id="preview" style="max-width: 100%; display: none;">
+  </div>
+</div>
+
+
         <button type="submit" name="submit" class="btn btn-primary w-100">Simpan Barang</button>
       </form>
     </div>
@@ -265,6 +278,81 @@ body {
       }
     }
   </script>
+  <script>
+  let cropper;
+  const imageInput = document.getElementById('imageInput');
+  const preview = document.getElementById('preview');
+  const croppedInput = document.getElementById('croppedImage');
+
+  imageInput.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        preview.src = event.target.result;
+        preview.style.display = 'block';
+
+        if (cropper) cropper.destroy(); // Hapus cropper lama jika ada
+
+        cropper = new Cropper(preview, {
+          aspectRatio: 16 / 9,
+          viewMode: 1,
+          autoCropArea: 1,
+          crop(event) {
+            // Opsional: lihat data crop
+          }
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Override form submit agar gambar hasil crop dikirim
+ document.querySelector('form').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  if (cropper) {
+    cropper.getCroppedCanvas({
+      width: 1280,
+      height: 720,
+    }).toBlob(function (blob) {
+      const form = e.target;
+      const formData = new FormData();
+
+      // Ambil semua input teks dari form
+      formData.append('submit', '1');
+      formData.append('nama_barang', form.nama_barang.value);
+      formData.append('tgl', form.tgl.value);
+      formData.append('harga_awal', form.harga_awal.value);
+      formData.append('deskripsi_barang', form.deskripsi_barang.value);
+      formData.append('kategori', form.kategori.value);
+
+      // Tambah file hasil crop
+      formData.append('cropped_image', blob, 'cropped.jpg');
+
+      fetch('', {
+        method: 'POST',
+        body: formData
+      }).then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          return response.text();
+        }
+      }).then(result => {
+        console.log(result); // atau tampilkan error
+      }).catch(error => {
+        console.error(error);
+      });
+    });
+  }
+});
+
+
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
 </body>
 
 </html>

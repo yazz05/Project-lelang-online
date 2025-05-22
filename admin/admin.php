@@ -143,7 +143,7 @@ $data = mysqli_query($koneksi, "
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="dashboard-title m-0">Data Admin</h3>
         <a href="tambahAdmin.php" class="btn btn-tambah">
-          <i class="fas fa-plus"></i> Tambah Petugas
+          <i class="fas fa-plus"></i> Tambah Admin
         </a>
       </div>
       <table class="table table-striped table-custom">
