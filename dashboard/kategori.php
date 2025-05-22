@@ -121,19 +121,20 @@ $stmt->close();
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="index.php">Home</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Kategori
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="kategori.php?kategori=elektronik">Elektronik</a></li>
-              <li><a class="dropdown-item" href="kategori.php?kategori=furnitur">Furnitur</a></li>
-              <li><a class="dropdown-item" href="kategori.php?kategori=pakaian">Pakaian</a></li>
-              <li><a class="dropdown-item" href="kategori.php?kategori=alat">Alat</a></li>
-              <li><a class="dropdown-item" href="kategori.php?kategori=kendaraan">Kendaraan</a></li>
-              <li><a class="dropdown-item" href="kategori.php?kategori=lainnya">Barang lainnya</a></li>
-            </ul>
-          </li>
+         <li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Kategori
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#elektronik">Elektronik</a></li>
+    <li><a class="dropdown-item" href="#furnitur">Furnitur</a></li>
+    <li><a class="dropdown-item" href="#pakaian">Pakaian</a></li>
+    <li><a class="dropdown-item" href="#alat">Alat</a></li>
+    <li><a class="dropdown-item" href="#kendaraan">Kendaraan</a></li>
+    <li><a class="dropdown-item" href="#baranglainnya">Barang Lainnya</a></li>
+  </ul>
+</li>
+
           <li class="nav-item">
             <a class="nav-link" href="lelang.php">Lelang</a>
           </li>
@@ -266,7 +267,7 @@ $stmt->close();
           <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.4rem; margin-bottom: 20px;">Ikuti Kami</h5>
           <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-facebook"></i></a>
           <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-twitter"></i></a>
-          <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-instagram"></i></a>
+          <a href="https://www.instagram.com/lelon.official_dummy?igsh=ZzdjdGZveHFsaHN2" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-instagram"></i></a>
           <a href="#" style="margin-right: 15px; color: #dcdcdc; font-size: 1.5rem;"><i class="bi bi-linkedin"></i></a>
         </div>
       </div>

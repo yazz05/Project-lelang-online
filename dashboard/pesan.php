@@ -90,6 +90,10 @@ $stmt->close();
     </div>
   </div>
 
+
+  <!-- Footer -->
+    <?php include 'footer.php'; ?>
+    
   <script>
     function logoutAlert() {
       if (confirm("Yakin mau logout?")) {
