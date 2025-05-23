@@ -141,7 +141,7 @@ $data = mysqli_query($koneksi, "SELECT * FROM tb_masyarakat");
                             <td><?= $no++ ?></td>
                             <td><?= htmlspecialchars($row['nama_lengkap']) ?></td>
                             <td><?= htmlspecialchars($row['username']) ?></td>
-                            <td><?= htmlspecialchars($row['password']) ?></td>
+                            <td><?= str_repeat('*', 8) ?></td>
                             <td><?= htmlspecialchars($row['telp']) ?></td>
                             <td>
                                 <span class="text-muted">Tidak tersedia</span>

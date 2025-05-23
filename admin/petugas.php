@@ -164,7 +164,7 @@ $data = mysqli_query($koneksi, "
               <td><?= $no++ ?></td>
               <td><?= htmlspecialchars($row['nama_petugas']) ?></td>
               <td><?= htmlspecialchars($row['username']) ?></td>
-              <td><?= htmlspecialchars($row['password']) ?></td>
+              <td><?= str_repeat('*', 8) ?></td>
               <td>
                 <a href="editPetugas.php?id=<?= $row['id_petugas'] ?>" class="btn btn-warning btn-sm">Edit</a>
                 <a href="petugas.php?hapus=<?= $row['id_petugas'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus data ini?')">Hapus</a>

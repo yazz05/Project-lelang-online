@@ -71,22 +71,23 @@ $queryRiwayat = $koneksi->query("
                         <?php
                         $min_penawaran = max($data['harga_awal'], $tertinggi + 1);
                         ?>
-
                         <div class="mb-3">
                             <label for="penawaranHarga" class="form-label">Masukkan Penawaran Anda</label>
                             <input
-                                type="number"
+                                type="text"
                                 name="penawaran_harga"
                                 class="form-control"
                                 id="penawaranHarga"
                                 required
-                                min="<?= $min_penawaran ?>">
-                            <!-- ALERT, default hidden dengan class d-none -->
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                                maxlength="20"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                data-min="<?= $min_penawaran ?>">
                             <div class="form-text text-danger d-none" id="alertPenawaran">
-                                Pastikan tawaran anda melebihi jumlah harga awal
+                                Tawaran harus melebihi Rp<?= number_format($min_penawaran, 0, ',', '.') ?>
                             </div>
                         </div>
-
                         <button type="submit" class="btn btn-success">Tawar Sekarang</button>
                     </form>
 
@@ -130,78 +131,80 @@ $queryRiwayat = $koneksi->query("
     </div>
 
     <!-- Script zoom -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const originalImg = document.getElementById('zoomable-image');
-        const modal = document.getElementById('zoom-modal');
-        const modalImg = document.getElementById('zoomed-image');
-        const overlay = document.getElementById('zoom-overlay');
-        const closeBtn = document.getElementById('close-zoom');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const originalImg = document.getElementById('zoomable-image');
+            const modal = document.getElementById('zoom-modal');
+            const modalImg = document.getElementById('zoomed-image');
+            const overlay = document.getElementById('zoom-overlay');
+            const closeBtn = document.getElementById('close-zoom');
 
-        if (!originalImg || !modal || !modalImg || !overlay || !closeBtn) {
-            console.error("Elemen modal atau gambar tidak ditemukan");
-            return;
-        }
-
-        let scale = 1;
-        const scaleStep = 0.1;
-        const minScale = 1;
-        const maxScale = 5;
-
-        // Set animasi dan origin
-        modalImg.style.transition = 'transform 0.2s ease';
-        modalImg.style.transformOrigin = 'center center';
-
-        function resetZoom() {
-            scale = 1;
-            modalImg.style.transform = `scale(${scale})`;
-            modalImg.style.cursor = 'zoom-in';
-        }
-
-        originalImg.style.cursor = 'pointer';
-        originalImg.addEventListener('click', function () {
-            modal.style.display = 'flex';
-            modal.style.flexDirection = 'column';
-            modal.style.justifyContent = 'center';
-            modal.style.alignItems = 'center';
-            modalImg.src = originalImg.src;
-            resetZoom();
-        });
-
-        overlay.addEventListener('click', closeModal);
-        closeBtn.addEventListener('click', closeModal);
-
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-
-        modalImg.addEventListener('wheel', function (e) {
-            e.preventDefault();
-            if (e.deltaY < 0) {
-                scale += scaleStep;
-                if (scale > maxScale) scale = maxScale;
-            } else {
-                scale -= scaleStep;
-                if (scale < minScale) scale = minScale;
+            if (!originalImg || !modal || !modalImg || !overlay || !closeBtn) {
+                console.error("Elemen modal atau gambar tidak ditemukan");
+                return;
             }
-            modalImg.style.transform = `scale(${scale})`;
-            modalImg.style.cursor = scale > 1 ? 'zoom-out' : 'zoom-in';
-        });
 
-        modalImg.addEventListener('click', function () {
-            if (scale > 1) {
+            let scale = 1;
+            const scaleStep = 0.1;
+            const minScale = 1;
+            const maxScale = 5;
+
+            // Set animasi dan origin
+            modalImg.style.transition = 'transform 0.2s ease';
+            modalImg.style.transformOrigin = 'center center';
+
+            function resetZoom() {
+                scale = 1;
+                modalImg.style.transform = `scale(${scale})`;
+                modalImg.style.cursor = 'zoom-in';
+            }
+
+            originalImg.style.cursor = 'pointer';
+            originalImg.addEventListener('click', function() {
+                modal.style.display = 'flex';
+                modal.style.flexDirection = 'column';
+                modal.style.justifyContent = 'center';
+                modal.style.alignItems = 'center';
+                modalImg.src = originalImg.src;
                 resetZoom();
-            } else {
-                closeModal();
-            }
-        });
+            });
 
-        // Mencegah scroll body saat zoom aktif
-        modal.addEventListener('wheel', function (e) {
-            e.preventDefault();
-        }, { passive: false });
-    });
-</script>
+            overlay.addEventListener('click', closeModal);
+            closeBtn.addEventListener('click', closeModal);
+
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+
+            modalImg.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    scale += scaleStep;
+                    if (scale > maxScale) scale = maxScale;
+                } else {
+                    scale -= scaleStep;
+                    if (scale < minScale) scale = minScale;
+                }
+                modalImg.style.transform = `scale(${scale})`;
+                modalImg.style.cursor = scale > 1 ? 'zoom-out' : 'zoom-in';
+            });
+
+            modalImg.addEventListener('click', function() {
+                if (scale > 1) {
+                    resetZoom();
+                } else {
+                    closeModal();
+                }
+            });
+
+            // Mencegah scroll body saat zoom aktif
+            modal.addEventListener('wheel', function(e) {
+                e.preventDefault();
+            }, {
+                passive: false
+            });
+        });
+    </script>
 
 
     <!-- Script validasi penawaran -->
@@ -209,15 +212,18 @@ $queryRiwayat = $koneksi->query("
         document.getElementById('formPenawaran').addEventListener('submit', function(e) {
             const input = document.getElementById('penawaranHarga');
             const alert = document.getElementById('alertPenawaran');
-            const min = parseInt(input.min);
-            const value = parseInt(input.value);
+            const min = parseInt(input.dataset.min);
+            const value = input.value;
 
-            if (value < min) {
-                e.preventDefault(); // hentikan submit
-                alert.classList.remove('d-none'); // tampilkan alert
+            // Validasi: harus angka, minimal sesuai min, maksimal 20 digit
+            if (!/^\d+$/.test(value) ||
+                BigInt(value) < BigInt(min) ||
+                value.length > 20) {
+                e.preventDefault();
+                alert.classList.remove('d-none');
                 input.classList.add('is-invalid');
             } else {
-                alert.classList.add('d-none'); // sembunyikan kalau valid
+                alert.classList.add('d-none');
                 input.classList.remove('is-invalid');
             }
         });
