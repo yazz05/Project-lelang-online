@@ -3,12 +3,13 @@ $koneksi = new mysqli("localhost", "root", "", "lelang_online");
 $id_lelang = $_GET['id_lelang'] ?? 0;
 
 $query = "
-    SELECT l.*, b.nama_barang, b.kategori, b.harga_awal, m.nama_lengkap, l.harga_akhir 
+    SELECT l.*, b.nama_barang, b.kategori, b.harga_awal, b.foto_barang, m.nama_lengkap, l.harga_akhir 
     FROM tb_lelang l
     JOIN tb_barang b ON l.id_barang = b.id_barang
     LEFT JOIN tb_masyarakat m ON l.id_user = m.id_user
     WHERE l.id_lelang = '$id_lelang'
 ";
+
 
 $result = $koneksi->query($query);
 $data = $result->fetch_assoc();
@@ -118,6 +119,7 @@ $data = $result->fetch_assoc();
       color: #2a7fc1;
     }
 
+
     .footer {
       text-align: center;
       margin-top: 40px;
@@ -163,6 +165,13 @@ $data = $result->fetch_assoc();
   </div>
 
   <?php if ($data): ?>
+
+    <?php if (!empty($data['foto_barang'])): ?>
+    <div style="text-align: center; margin-bottom: 30px;">
+      <img src="../uploads/<?= htmlspecialchars($data['foto_barang']) ?>" alt="Foto Barang" style="max-width: 65%; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+    </div>
+  <?php endif; ?>
+
     <table>
       <tr>
         <th>Nama Barang</th>
@@ -215,6 +224,7 @@ $data = $result->fetch_assoc();
     <div class="no-print">
       <a href="#" onclick="window.print()" class="print-btn">🖨️ Cetak Halaman</a>
     </div>
+    
   <?php else: ?>
     <p>Data tidak ditemukan.</p>
   <?php endif; ?>
